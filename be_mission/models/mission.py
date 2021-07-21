@@ -279,7 +279,8 @@ class MissionOrdinaire(models.Model):
 
     equipement = fields.Selection(string='Equipement?', selection=[
         ('oui', 'Oui'), ('non', 'Non')], required=False, )
-    date_eq = fields.Date(string='Date point financier', required=False)
+    date_q = fields.Date(string='Date Equipement', required=False)
+    date_eq = fields.Date(string='Date frais Equipement', required=False)
 
     p_equipement = fields.Selection(string='Point Equipement?', selection=[
         ('oui', 'Oui'), ('non', 'Non')], required=False, )
@@ -288,9 +289,7 @@ class MissionOrdinaire(models.Model):
     commentaire_dep = fields.Text(
         string="Commentaire",
         required=False)
-    commentaire_ret = fields.Text(
-        string="Commentaire",
-        required=False)
+    commentaire_ret = fields.Text(string="Commentaire", required=False)
 
     @api.model
     def create(self, vals):

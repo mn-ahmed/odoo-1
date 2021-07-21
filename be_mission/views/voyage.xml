@@ -3,7 +3,7 @@
     <data>
 
            <!-- Top menu item -->
-         <menuitem name="Voyage" id="be_mission_voyage" groups="base.group_user" sequence="20"/>
+         <menuitem name="Voyage" id="be_mission_voyage" groups="be_mission.group_create_voyage" sequence="20"/>
 
         <!-- Voyage vacance -->
         <menuitem name="Voyage Vacance" id="be_mission_voyage_vacance" parent="be_mission_voyage" sequence="10"/>

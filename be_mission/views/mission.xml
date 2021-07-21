@@ -2,7 +2,7 @@
   <data>
 
     <!-- Top menu item -->
-    <menuitem name="Mission" id="be_mission" groups="base.group_user" sequence="10"/>
+    <menuitem name="Mission" id="be_mission" sequence="10" groups="be_mission.group_create_mission"/>
 
     <!-- menu categories -->
 
@@ -383,7 +383,7 @@
                   </group>
                   <group>
                     <field name="date_f" attrs="{'readonly': [('state', 'not in', ('draft','depart'))],'invisible':[('frais_m', 'not in', 'oui')] }"/>
-                    <field name="date_eq" attrs="{'invisible':[('equipement', 'not in', 'oui')],'readonly': [('state', 'not in', ('draft','depart'))]}"/>
+                    <field name="date_q" attrs="{'invisible':[('equipement', 'not in', 'oui')],'readonly': [('state', 'not in', ('draft','depart'))]}"/>
                   </group>
                 </group>
                 <group>

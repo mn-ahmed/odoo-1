@@ -501,7 +501,7 @@
                                             <t t-else="">
                                                 <td><strong>Equipement? :</strong></td>
                                                 <td><span t-field="doc.equipement"/></td>
-                                                <td class="text-right" colspan="2"><strong>Date : </strong><span t-field="doc.date_eq"/></td>
+                                                <td class="text-right" colspan="2"><strong>Date : </strong><span t-field="doc.date_q"/></td>
                                             </t>
                                         </tr>
                                         <tr>
