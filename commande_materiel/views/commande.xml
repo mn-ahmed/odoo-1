@@ -1,0 +1,139 @@
+<odoo>
+  <data>
+
+    <!-- Frm veiew commande materiel-->
+    <record id="commande_materiel_form_view_view_form" model="ir.ui.view">
+        <field name="name">commande_materiel_form_view_view_form</field>
+        <field name="model">commande.materiel</field>
+        <field name="arch" type="xml">
+            <form string="Commande Matriéls">
+              <header>
+                <button name="confirme_user" type="object" string="Confimer" states="draft"
+                        class="btn-primary" groups="base.group_user"/>
+                <button name="confirme_depart" type="object" string="Départ. Confimation" states="en_cours,annulee"
+                        class="btn-primary" groups="commande_materiel.group_commande_materiel_respo_depart,commande_materiel.group_commande_materiel_csa"/>
+                <button name="confirme_manager" type="object" string="Manager Confirmation" states="accepter" class="btn-primary"
+                        groups="commande_materiel.group_commande_materiel_csa,commande_materiel.group_commande_materiel_daf" />
+                <button name="reject_commande" type="object" string="Rejet" states="en_cours,accepter"
+                        groups="commande_materiel.group_commande_materiel_daf,commande_materiel.group_commande_materiel_csa,commande_materiel.group_commande_materiel_respo_depart" />
+                <button name="recu_user" type="object" string="Reçu" states="approuver" class="btn-primary"
+                        groups="base.group_user" />
+                <button name="annulee_commande" type="object" string="Annulée" states="draft"/>
+                <field name="state" widget="statusbar" string="confirme" statusbar_visible="draft,en_cours,accepter,approuver,recu"/>
+              </header>
+                <sheet>
+                   <div class="oe_title">
+                        <div class="oe_title">
+                        <h1>
+                            <field name="name"/><br/>
+                        </h1>
+                        </div>
+                   </div>
+                  <div>
+                    <group>
+                      <group>
+                        <field name="employee_id" attrs="{'readonly':[('state', '!=', 'draft')]}" />
+                        <field name="department_id" attrs="{'readonly':[('state', '!=', 'draft')]}" />
+                      </group>
+                      <group>
+                        <field name="date" attrs="{'readonly':[('state', '!=', 'draft')]}" />
+                        <field name="date_recep" />
+                      </group>
+                    </group>
+                    <notebook>
+                      <page string="Lignes des Commande">
+                        <field name="commande_line_ids">
+                          <tree editable="bottom">
+                            <field name="product_id" />
+                            <field name="description" />
+                            <field name="qty" />
+                            <field name="uom" />
+                          </tree>
+                        </field>
+                      </page>
+                      <page string="Autres Informations">
+                        <group>
+                          <group>
+                            <field name="employee_confirme_par_id" />
+                            <field name="employee_accepter_par_id" />
+                            <field name="employee_aprouver_par_id" />
+                            <field name="employee_rejeter_par_id" />
+                          </group>
+                          <group>
+                            <field name="date_confirm" />
+                            <field name="date_accept" />
+                            <field name="date_appr" />
+                            <field name="date_reject" />
+                          </group>
+                        </group>
+                      </page>
+                    </notebook>
+
+                    <group>
+                      <group>
+                        <field name="raison" attrs="{'readonly':[('state', '!=', 'draft')]}" placeholder=""/>
+                      </group>
+                      <group>
+                        <field name="satisfaction" attrs="{'readonly':[('state', '!=', 'draft')]}"/>
+                      </group>
+                    </group>
+
+                  </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+
+     <!-- Top menu item -->
+
+    <menuitem name="Commande Materiel" id="commande_materiel_menu_root" sequence="20"/>
+
+    <!-- explicit list view definition -->
+
+    <record model="ir.ui.view" id="commande_materiel.list">
+      <field name="name">commande_materiel.list</field>
+      <field name="model">commande.materiel</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="name" string="Numéro"/>
+          <field name="employee_id"/>
+          <field name="department_id"/>
+          <field name="date" />
+          <field name="state"/>
+        </tree>
+      </field>
+    </record>
+
+    <!-- actions opening views on models -->
+
+    <record model="ir.actions.act_window" id="commande_materiel.action_window">
+      <field name="name">Liste des Commandes</field>
+      <field name="res_model">commande.materiel</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- server action to the one above -->
+
+    <record model="ir.actions.server" id="commande_materiel.action_server">
+      <field name="name">commande_materiel.server</field>
+      <field name="model_id" ref="model_commande_materiel"/>
+      <field name="state">code</field>
+      <field name="code">
+        action = {
+          "type": "ir.actions.act_window",
+          "view_mode": "tree,form",
+          "res_model": model._name,
+        }
+      </field>
+    </record>
+
+
+
+    <!-- actions -->
+
+    <menuitem name="Commande" id="commande_materiel_commande" parent="commande_materiel_menu_root"
+              action="commande_materiel.action_window"/>
+
+  </data>
+</odoo>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+
+         <record id="commande_materiel_aprobation_root" model="ir.module.category">
+            <field name="name">Commande Mareiels</field>
+            <field name="description">Commande Materiel Mangers</field>
+        </record>
+
+        <record id="group_commande_materiel_csa" model="res.groups">
+            <field name="name">CSA</field>
+            <field name="category_id" ref="commande_materiel.commande_materiel_aprobation_root"/>
+        </record>
+
+        <record id="group_commande_materiel_daf" model="res.groups">
+            <field name="name">DAF</field>
+             <field name="implied_ids" eval="[(4, ref('group_commande_materiel_csa'))]" />
+            <field name="category_id" ref="commande_materiel.commande_materiel_aprobation_root"/>
+        </record>
+
+        <record id="group_commande_materiel_respo_depart" model="res.groups">
+            <field name="name">Responsables Département</field>
+            <field name="category_id" ref="commande_materiel.commande_materiel_aprobation_root"/>
+        </record>
+
+
+
+    </data>
+</odoo>

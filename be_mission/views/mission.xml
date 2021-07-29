@@ -143,6 +143,8 @@
       </field>
     </record>
 
+    <!--  -->
+
        <!-- Mession externe arrivé action -->
     <record model="ir.actions.act_window" id="mission_externe_ar_action_window">
       <field name="name">Mission Externe</field>

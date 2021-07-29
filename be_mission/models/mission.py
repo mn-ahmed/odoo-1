@@ -13,8 +13,7 @@ class MissionExterne(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
 
     name = fields.Char(string='Service Number', copy=False, default="Nouveau")
-    date = fields.Date(
-        string='Date',
+    date = fields.Date( string='Date',
         default=fields.Date.today(),
         required=True, readonly=True)
     person_name = fields.Many2one(
