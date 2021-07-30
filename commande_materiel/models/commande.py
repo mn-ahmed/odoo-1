@@ -74,7 +74,9 @@ class CommandeMateriel(models.Model):
                                             string='Lignes des Commandes',
                                             copy=True,)
     commentaire = fields.Text('commentaire', required=False)
-    raison = fields.Text('Raison', required=False)
+    motifrejet = fields.Text(string="Motif de Rejet",
+                             required=False)
+
     satisfaction = fields.Selection(string='Satisfaction',
                                     selection=[('satisfait', 'Satisfait'),
                                                ('non_satisfait', 'Non Satisfait')],
@@ -114,7 +116,7 @@ class CommandeMateriel(models.Model):
     def confirme_depart(self):
         for rec in self:
             current_user = rec.env.user
-            if rec.department_id.manager_id.user_id == current_user:
+            if rec.env.user.has_group('commande_materiel.group_commande_materiel_daf') or rec.department_id.manager_id.user_id == current_user:
                 rec.date_accept = fields.Date.today()
                 rec.employee_accepter_par_id = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
                 rec.state = 'accepter'
@@ -145,7 +147,13 @@ class CommandeMateriel(models.Model):
 
     def reject_commande(self):
         for rec in self:
-            rec.state = 'rejeter'
+            if rec.motifrejet == False:
+                raise Warning(
+                    _('Le champ Motif de Rejet de doit pas etre vide !!'))
+            else:
+                rec.date_appr = fields.Date.today()
+                rec.employee_aprouver_par_id = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
+                rec.state = 'rejeter'
 
     def annulee_commande(self):
         for rec in self:

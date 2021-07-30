@@ -7,6 +7,14 @@
         <field name="model">commande.materiel</field>
         <field name="arch" type="xml">
             <form string="Commande Matriéls">
+              <style>
+                  .o_form_view .o_form_statusbar > .o_statusbar_status > .o_arrow_button.btn-primary.disabled {
+                     background: #f9dfa6;
+                  }
+                  .o_form_view .o_form_statusbar > .o_statusbar_status > .o_arrow_button.btn-primary.disabled::after {
+                     border-left-color: #f9dfa6;
+                  }
+              </style>
 
               <header>
                 <button name="confirme_user" type="object" string="Confimer" states="draft"
@@ -17,12 +25,13 @@
                         groups="commande_materiel.group_commande_materiel_csa,commande_materiel.group_commande_materiel_daf" />
                 <button name="reject_commande" type="object" string="Rejet" states="en_cours,accepter"
                         groups="commande_materiel.group_commande_materiel_daf,commande_materiel.group_commande_materiel_csa,commande_materiel.group_commande_materiel_respo_depart" />
+
                 <button name="recu_user" type="object" string="Reçu" states="approuver" class="btn-primary"
                         groups="base.group_user" />
                 <button name="annulee_commande" type="object" string="Annulée" states="draft"/>
                 <field name="state" widget="statusbar" string="confirme"
                        statusbar_visible="draft,en_cours,accepter,approuver,recu"
-                       colors='{"draft":"red","en_cours":"blue"}'/>
+                       />
               </header>
                 <sheet>
                    <div class="oe_title">
@@ -61,6 +70,7 @@
                             <field name="employee_accepter_par_id" />
                             <field name="employee_aprouver_par_id" />
                             <field name="employee_rejeter_par_id" />
+                            <field name="motifrejet"/>
                           </group>
                           <group>
                             <field name="date_confirm" />
@@ -89,7 +99,7 @@
 
     <!-- explicit list view definition -->
 
-    <record model="ir.ui.view" id="commande_materiel.list">
+    <record model="ir.ui.view" id="commande_materiel_list">
       <field name="name">commande_materiel.list</field>
       <field name="model">commande.materiel</field>
       <field name="arch" type="xml">
@@ -103,17 +113,77 @@
       </field>
     </record>
 
+        <record model="ir.ui.view" id="view_commande_materiel_graph">
+            <field name="name">commande.mareriel.graph</field>
+            <field name="model">commande.materiel</field>
+            <field name="arch" type="xml">
+                <graph string="Commandes" sample="1">
+                    <field name="employee_id"/>
+                    <field name="commande_line_ids" type="measure"/>
+                </graph>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_commande_materiel_pivot">
+            <field name="name">commande.materiel.pivot</field>
+            <field name="model">commande.materiel</field>
+            <field name="arch" type="xml">
+                <pivot string="Commandes" sample="1">
+                    <field name="date" type="row"/>
+                    <field name="name" type="measure"/>
+                </pivot>
+            </field>
+        </record>
     <!-- actions opening views on models -->
 
     <record model="ir.actions.act_window" id="commande_materiel_action_window">
       <field name="name">Liste des Commandes</field>
+      <field name="type">ir.actions.act_window</field>
       <field name="res_model">commande.materiel</field>
-      <field name="view_mode">tree,form</field>
+      <field name="view_mode">tree,form,pivot,graph,activity</field>
     </record>
 
-    <menuitem name="Commande Materiel" id="commande_materiel_menu_root" sequence="20"/>
-    <menuitem name="Commande" id="commande_materiel_commande" parent="commande_materiel_menu_root"
+    <record id="commande_materiel_action_view_tree" model="ir.actions.act_window.view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="commande_materiel.commande_materiel_list"/>
+            <field name="act_window_id" ref="commande_materiel_action_window"/>
+        </record>
+
+        <record id="commande_materiel_action_view_form" model="ir.actions.act_window.view">
+            <field name="sequence" eval="3"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="commande_materiel.commande_materiel_form_view_view_form"/>
+            <field name="act_window_id" ref="commande_materiel_action_window"/>
+        </record>
+
+        <record id="commande_materiel_action_view_pivot" model="ir.actions.act_window.view">
+            <field name="sequence" eval="5"/>
+            <field name="view_mode">pivot</field>
+            <field name="view_id" ref="commande_materiel.view_commande_materiel_pivot"/>
+            <field name="act_window_id" ref="commande_materiel_action_window"/>
+        </record>
+
+        <record id="commande_materiel_action_view_graph" model="ir.actions.act_window.view">
+            <field name="sequence" eval="6"/>
+            <field name="view_mode">graph</field>
+            <field name="view_id" ref="commande_materiel.view_commande_materiel_graph"/>
+            <field name="act_window_id" ref="commande_materiel_action_window"/>
+        </record>
+
+    <menuitem name="Expression de Besoins" id="commande_materiel_menu_root" sequence="20"/>
+    <menuitem name="Les Commandes" id="commande_materiel_commande" parent="commande_materiel_menu_root" sequence="20"
               action="commande_materiel_action_window"/>
+
+    <record model="ir.actions.act_window" id="commande_materiel_action_window_to_validate">
+      <field name="name">Liste des Commandes à Confirmer</field>
+      <field name="res_model">commande.materiel</field>
+      <field name="view_mode">tree,form</field>
+        <field name="context">{'create': False}</field>
+        <field name="domain">[('state', 'not in', ('draft','rejeter','recu','annulee'))]</field>
+    </record>
+
+    <menuitem name="Les Commandes à Confirmer" id="commande_materiel_commande_to_validate" parent="commande_materiel_menu_root" sequence="30"
+              action="commande_materiel_action_window_to_validate"/>
 
   </data>
 </odoo>
