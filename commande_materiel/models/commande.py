@@ -73,7 +73,8 @@ class CommandeMateriel(models.Model):
                                             'commande_id',
                                             string='Lignes des Commandes',
                                             copy=True,)
-    raison = fields.Text('Commandes', required=False)
+    commentaire = fields.Text('commentaire', required=False)
+    raison = fields.Text('Raison', required=False)
     satisfaction = fields.Selection(string='Satisfaction',
                                     selection=[('satisfait', 'Satisfait'),
                                                ('non_satisfait', 'Non Satisfait')],

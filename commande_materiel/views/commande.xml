@@ -7,6 +7,7 @@
         <field name="model">commande.materiel</field>
         <field name="arch" type="xml">
             <form string="Commande Matriéls">
+
               <header>
                 <button name="confirme_user" type="object" string="Confimer" states="draft"
                         class="btn-primary" groups="base.group_user"/>
@@ -19,7 +20,9 @@
                 <button name="recu_user" type="object" string="Reçu" states="approuver" class="btn-primary"
                         groups="base.group_user" />
                 <button name="annulee_commande" type="object" string="Annulée" states="draft"/>
-                <field name="state" widget="statusbar" string="confirme" statusbar_visible="draft,en_cours,accepter,approuver,recu"/>
+                <field name="state" widget="statusbar" string="confirme"
+                       statusbar_visible="draft,en_cours,accepter,approuver,recu"
+                       colors='{"draft":"red","en_cours":"blue"}'/>
               </header>
                 <sheet>
                    <div class="oe_title">
@@ -42,7 +45,7 @@
                     </group>
                     <notebook>
                       <page string="Lignes des Commande">
-                        <field name="commande_line_ids">
+                        <field name="commande_line_ids" attrs="{'readonly': [('state', '!=', 'draft')]}">
                           <tree editable="bottom">
                             <field name="product_id" />
                             <field name="description" />
@@ -71,7 +74,7 @@
 
                     <group>
                       <group>
-                        <field name="raison" attrs="{'readonly':[('state', '!=', 'draft')]}" placeholder=""/>
+                        <field name="commentaire" attrs="{'readonly':[('state', '!=', 'draft')]}" placeholder=""/>
                       </group>
                       <group>
                         <field name="satisfaction" attrs="{'readonly':[('state', '!=', 'draft')]}"/>
@@ -84,11 +87,6 @@
         </field>
     </record>
 
-
-     <!-- Top menu item -->
-
-    <menuitem name="Commande Materiel" id="commande_materiel_menu_root" sequence="20"/>
-
     <!-- explicit list view definition -->
 
     <record model="ir.ui.view" id="commande_materiel.list">
@@ -98,42 +96,24 @@
         <tree>
           <field name="name" string="Numéro"/>
           <field name="employee_id"/>
-          <field name="department_id"/>
+          <field name="department_id" string="Département"/>
           <field name="date" />
-          <field name="state"/>
+          <field name="state" string="Statut"/>
         </tree>
       </field>
     </record>
 
     <!-- actions opening views on models -->
 
-    <record model="ir.actions.act_window" id="commande_materiel.action_window">
+    <record model="ir.actions.act_window" id="commande_materiel_action_window">
       <field name="name">Liste des Commandes</field>
       <field name="res_model">commande.materiel</field>
       <field name="view_mode">tree,form</field>
     </record>
 
-    <!-- server action to the one above -->
-
-    <record model="ir.actions.server" id="commande_materiel.action_server">
-      <field name="name">commande_materiel.server</field>
-      <field name="model_id" ref="model_commande_materiel"/>
-      <field name="state">code</field>
-      <field name="code">
-        action = {
-          "type": "ir.actions.act_window",
-          "view_mode": "tree,form",
-          "res_model": model._name,
-        }
-      </field>
-    </record>
-
-
-
-    <!-- actions -->
-
+    <menuitem name="Commande Materiel" id="commande_materiel_menu_root" sequence="20"/>
     <menuitem name="Commande" id="commande_materiel_commande" parent="commande_materiel_menu_root"
-              action="commande_materiel.action_window"/>
+              action="commande_materiel_action_window"/>
 
   </data>
 </odoo>
