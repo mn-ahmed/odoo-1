@@ -73,14 +73,22 @@ class CommandeMateriel(models.Model):
                                             'commande_id',
                                             string='Lignes des Commandes',
                                             copy=True,)
-    commentaire = fields.Text('commentaire', required=False)
-    motifrejet = fields.Text(string="Motif de Rejet",
+    commentaire = fields.Text('Commentaire', required=False)
+    # rejet = fields.Selection(
+    #     string='Rejet',
+    #     selection=[('oui', 'Oui'),
+    #                ('non', 'Non'), ],
+    #     required=False, default='non', )
+    #rejet = fields.Boolean(string='Rejet', required=False, default=False)
+    motifrejet = fields.Char(string="Motif de Rejet",
                              required=False)
 
     satisfaction = fields.Selection(string='Satisfaction',
-                                    selection=[('satisfait', 'Satisfait'),
-                                               ('non_satisfait', 'Non Satisfait')],
-                                    required=False, )
+                                    selection=[('non',' '),
+                                                ('satisfait', 'Satisfait'),
+                                                ('non_satisfait', 'Non Satisfait')],
+                                    required=False,
+                                    default='non')
 
     state = fields.Selection([('draft', 'Nouveau'),
                                 ('en_cours', 'En Cours Départ.'),
@@ -138,21 +146,26 @@ class CommandeMateriel(models.Model):
     def recu_user(self):
         for rec in self:
             user = rec.env.user
-            if rec.employee_id.user_id == user or rec.department_id.manager_id.user_id == user:
-                rec.date_recep = fields.Date.today()
-                rec.state = 'recu'
-            else:
+            if rec.employee_id.user_id != user or rec.department_id.manager_id.user_id != user:
                 raise Warning(
-                    _('Vous n\'êtes pas autorisé de passer cette action !! Veuillez connecter avec un autre utilisateur'))
+                    _('Vous n\'êtes pas autorisé de passer cette action !!'))
+            else:
+                if rec.satisfaction == 'non':
+                    raise Warning(
+                        _('Veuillez selectionner votre niveau de satisfaction !!'))
+                else:
+                    rec.date_recep = fields.Date.today()
+                    rec.state = 'recu'
+
 
     def reject_commande(self):
         for rec in self:
             if rec.motifrejet == False:
                 raise Warning(
-                    _('Le champ Motif de Rejet de doit pas etre vide !!'))
+                    _('Le champ Motif de Rejet ne de doit pas être vide !!'))
             else:
-                rec.date_appr = fields.Date.today()
-                rec.employee_aprouver_par_id = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
+                rec.date_reject = fields.Date.today()
+                rec.employee_rejeter_par_id = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
                 rec.state = 'rejeter'
 
     def annulee_commande(self):
