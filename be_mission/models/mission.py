@@ -91,7 +91,10 @@ class MissionExterne(models.Model):
         ('cancel', 'Annuler')],
         default='draft',
         track_visibility='onchange',)
-        
+    
+    jours = fields.Char(
+        string='Jours', 
+        required=False, default='Jours')
 
     @api.model
     def create(self, vals):
@@ -191,6 +194,10 @@ class MissionInterne(models.Model):
         default='draft',
         track_visibility='onchange', )
 
+    jours = fields.Char(
+        string='Jours',
+        required=False, default='Jours')
+
     @api.model
     def create(self, vals):
         vals['name'] = self.env['ir.sequence'].next_by_code(
@@ -289,6 +296,9 @@ class MissionOrdinaire(models.Model):
         string="Commentaire",
         required=False)
     commentaire_ret = fields.Text(string="Commentaire", required=False)
+    jours = fields.Char(
+        string='Jours',
+        required=False, default='Jours')
 
     @api.model
     def create(self, vals):
