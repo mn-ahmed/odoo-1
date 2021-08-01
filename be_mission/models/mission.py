@@ -13,13 +13,14 @@ class MissionExterne(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
 
     name = fields.Char(string='Service Number', copy=False, default="Nouveau")
-    date = fields.Date( string='Date',
-        default=fields.Date.today(),
-        required=True, readonly=True)
+    date = fields.Date(string='Date',
+                       default=fields.Date.today(),
+                       required=True, readonly=True)
     person_name = fields.Many2one(
         'res.partner', string="Nom et Prénom", required=True)
     employee_id = fields.Many2one('hr.employee', string='Employée',
-                                  default=lambda self: self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1),
+                                  default=lambda self: self.env['hr.employee'].search([('user_id', '=', self.env.uid)],
+                                                                                      limit=1),
                                   required=True, copy=True)
     date_depart = fields.Date(
         string='Date de départ', default=fields.Date.context_today, store=True, required=False)
@@ -62,14 +63,14 @@ class MissionExterne(models.Model):
     duree_s = fields.Char(string='Duree de séjour', required=False)
     duree_h = fields.Char(string='Duree de séjour hotel', required=False)
     autres = fields.Char(
-        string='Autres', 
+        string='Autres',
         required=False)
     commentaire = fields.Text(
         string="Commentaire",
         required=False)
 
     frais_h = fields.Selection(string='Frais de hotel', selection=[(
-        'employee', 'Employée'), ('webb', 'Webb Fentaine'),('autres', 'Autres')], required=False, )
+        'employee', 'Employée'), ('webb', 'Webb Fentaine'), ('autres', 'Autres')], required=False, )
 
     point_equi = fields.Text(string='Point Equipement', required=False)
     satisfact = fields.Selection(string='Satisfaction', selection=[('mauv', 'Mauvaise'),
@@ -90,11 +91,15 @@ class MissionExterne(models.Model):
         ('terminer', 'Terminer'),
         ('cancel', 'Annuler')],
         default='draft',
-        track_visibility='onchange',)
-    
-    jours = fields.Char(
-        string='Jours', 
-        required=False, default='Jours')
+        track_visibility='onchange', )
+    jours = fields.Char(string='Jours', required=False, default='Jours')
+
+    def unlink(self):
+        for rec in self:
+            if rec.state not in  ('draft', 'cancel'):
+                raise Warning(
+                    _('Vous ne pouvez pas supprimer un formulaire valider'))
+        return super(MissionExterne, self).unlink()
 
     @api.model
     def create(self, vals):
@@ -131,7 +136,9 @@ class MissionInterne(models.Model):
         string='Date',
         default=fields.Date.today(),
         required=True, readonly=True)
-    employee_id = fields.Many2one('hr.employee', string='Employée', default=lambda self: self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1),
+    employee_id = fields.Many2one('hr.employee', string='Employée',
+                                  default=lambda self: self.env['hr.employee'].search([('user_id', '=', self.env.uid)],
+                                                                                      limit=1),
                                   required=True, copy=True)
     date_depart = fields.Date(
         string='Date de départ', default=fields.Date.context_today, store=True, required=False)
@@ -140,26 +147,25 @@ class MissionInterne(models.Model):
     date_retour = fields.Date(
         string='Date de Retour', default=fields.Date.context_today, store=True, required=False)
 
-
     passport = fields.Char(string='Numéro de Passport', required=False)
     objet = fields.Text(string="Objet Mission", required=False)
     o_mission = fields.Selection(string='Ordre de mission', selection=[
-                                 ('oui', 'Oui'), ('non', 'Non')], required=False, )
+        ('oui', 'Oui'), ('non', 'Non')], required=False, )
     date_mission = fields.Date(
         string='Date de mission',
         required=False)
     billet = fields.Selection(string='Achat Billet d\'avion', selection=[
-                              ('oui', 'Oui'), ('non', 'Non')], required=False, )
+        ('oui', 'Oui'), ('non', 'Non')], required=False, )
     visa = fields.Selection(string='Visa', selection=[('oui', 'Oui'), ('non', 'Non')], required=False)
     date_visa = fields.Date(string='Date', required=False)
 
     l_invitation = fields.Selection(string='Lettre d\'invitation', selection=[
-                                    ('oui', 'Oui'), ('non', 'Non')], required=False, )
+        ('oui', 'Oui'), ('non', 'Non')], required=False, )
 
-    date_lettre = fields.Date(string='Date',  required=False)
+    date_lettre = fields.Date(string='Date', required=False)
 
     vehicule = fields.Selection(string='Besoin de véhicule?', selection=[
-                                ('oui', 'Oui'), ('non', 'Non')], required=False, )
+        ('oui', 'Oui'), ('non', 'Non')], required=False, )
     n_chauffeur = fields.Char(string='Nom de Chauffeur', required=False)
     chauffeur_cont = fields.Char(string='Contact de Chauffeur', required=False)
     matricule = fields.Char(string='Matricule de Véhicule', required=False)
@@ -176,10 +182,10 @@ class MissionInterne(models.Model):
     date_cd = fields.Date(string='Date de test covid', required=False)
 
     frais_m = fields.Selection(string='Frais de Mission', selection=[
-                               ('oui', 'Oui'), ('non', 'Non')], required=False, )
+        ('oui', 'Oui'), ('non', 'Non')], required=False, )
     date_f = fields.Date(string='Date de frais de mission', required=False)
     p_financier = fields.Selection(string='Point financier?', selection=[
-                                   ('oui', 'Oui'), ('non', 'Non')], required=False, )
+        ('oui', 'Oui'), ('non', 'Non')], required=False, )
     date_pf = fields.Date(string='Date point financier', required=False)
     commentaire = fields.Text(
         string="Commentaire",
@@ -193,10 +199,14 @@ class MissionInterne(models.Model):
         ('cancel', 'Annuler')],
         default='draft',
         track_visibility='onchange', )
+    jours = fields.Char(string='Jours', required=False, default='Jours')
 
-    jours = fields.Char(
-        string='Jours',
-        required=False, default='Jours')
+    def unlink(self):
+        for rec in self:
+            if rec.state not in  ('draft', 'cancel'):
+                raise Warning(
+                    _('Vous ne pouvez pas supprimer un formulaire valider'))
+        return super(MissionInterne, self).unlink()
 
     @api.model
     def create(self, vals):
@@ -247,7 +257,7 @@ class MissionOrdinaire(models.Model):
     passport = fields.Char(string='Passeport/CIN', required=False)
     objet = fields.Text(string="Objet Mission", required=False)
     o_mission = fields.Selection(string='Ordre de mission', selection=[
-                                 ('oui', 'Oui'), ('non', 'Non')], required=False, )
+        ('oui', 'Oui'), ('non', 'Non')], required=False, )
 
     date_mission = fields.Date(
         string='Date de mission',
@@ -260,7 +270,7 @@ class MissionOrdinaire(models.Model):
         required=False)
 
     vehicule = fields.Selection(string='Besoin de véhicule?', selection=[
-                                ('oui', 'Oui'), ('non', 'Non')], required=False, )
+        ('oui', 'Oui'), ('non', 'Non')], required=False, )
     n_chauffeur = fields.Char(string='Nom de Chauffeur', required=False)
     chauffeur_cont = fields.Char(string='Contact de Chauffeur', required=False)
     matricule = fields.Char(string='Matricule de Véhicule', required=False)
@@ -277,10 +287,10 @@ class MissionOrdinaire(models.Model):
     date_cd = fields.Date(string='Date de test covid', required=False)
 
     frais_m = fields.Selection(string='Frais de Mission', selection=[
-                               ('oui', 'Oui'), ('non', 'Non')], required=False, )
+        ('oui', 'Oui'), ('non', 'Non')], required=False, )
     date_f = fields.Date(string='Date de frais de mission', required=False)
     p_financier = fields.Selection(string='Point financier?', selection=[
-                                   ('oui', 'Oui'), ('non', 'Non')], required=False, )
+        ('oui', 'Oui'), ('non', 'Non')], required=False, )
     date_pf = fields.Date(string='Date point financier', required=False)
 
     equipement = fields.Selection(string='Equipement?', selection=[
@@ -316,6 +326,13 @@ class MissionOrdinaire(models.Model):
         default='draft',
         track_visibility='onchange', )
 
+    def unlink(self):
+        for rec in self:
+            if rec.state not in  ('draft', 'cancel'):
+                raise Warning(
+                    _('Vous ne pouvez pas supprimer un formulaire valider'))
+        return super(MissionOrdinaire, self).unlink()
+
     @api.model
     def create(self, vals):
         vals['name'] = self.env['ir.sequence'].next_by_code(
@@ -349,19 +366,37 @@ class ReportingTicket(models.Model):
 
     name = fields.Char(string='Name', required=True,
                        default=lambda self: _('New'), copy=False)
-    currency_id = fields.Many2one('res.currency', 'Currency', required=True, default=lambda self: self.env.company.currency_id.id)
-    employee_id = fields.Many2one('hr.employee', string='Employée', default=lambda self: self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1),
+    currency_id = fields.Many2one('res.currency', 'Currency', required=True,
+                                  default=lambda self: self.env.company.currency_id.id)
+    employee_id = fields.Many2one('hr.employee', string='Employée',
+                                  default=lambda self: self.env['hr.employee'].search([('user_id', '=', self.env.uid)],
+                                                                                      limit=1),
                                   required=True, copy=True)
 
     date_v = fields.Date(string='Date de Voyage', store=True, required=False)
     date_r = fields.Date(string='Date retour', required=False)
     trajet = fields.Char(string='Trajet', Required=False)
     nature = fields.Char(string='Nature', required=False)
-    montant_b = fields.Float(string='Montant Billet',digits=(12,2))
-    montant_bm = fields.Float(string='Montant Billet modifié', digits=(12,2))
-    montant_bmt = fields.Float(string='Montant Billet modifié (Trajet)', digits=(12,2))
+    montant_b = fields.Float(string='Montant Billet', digits=(12, 2))
+    montant_bm = fields.Float(string='Montant Billet modifié', digits=(12, 2))
+    montant_bmt = fields.Float(string='Montant Billet modifié (Trajet)', digits=(12, 2))
 
-    montant_total = fields.Float(compute='_compute_montant_total', string='Montant total', digits = (12,2))
+    montant_total = fields.Float(compute='_compute_montant_total', string='Montant total', digits=(12, 2))
+    state = fields.Selection([('draft', 'Nouveau'),
+                              ('valider', 'Valider')],
+                             default='draft',
+                             track_visibility='onchange', )
+
+    def unlink(self):
+        for rec in self:
+            if rec.state != 'draft':
+                raise Warning(
+                    _('Vous ne pouvez pas supprimer un formulaire valider'))
+        return super(ReportingTicket, self).unlink()
+
+    def valider(self):
+        for rec in self:
+            rec.state = 'valider'
 
     @api.depends('montant_b', 'montant_bm', 'montant_bmt')
     def _compute_montant_total(self):
@@ -371,7 +406,8 @@ class ReportingTicket(models.Model):
             montant_bm = record.montant_bm
             montant_bmt = record.montant_bmt
             record.update({
-                'montant_total': record.currency_id.round(montant_b) + record.currency_id.round(montant_bm) + record.currency_id.round(montant_bmt)
+                'montant_total': record.currency_id.round(montant_b) + record.currency_id.round(
+                    montant_bm) + record.currency_id.round(montant_bmt)
             })
 
     @api.model
@@ -380,4 +416,3 @@ class ReportingTicket(models.Model):
             'reporting.ticket') or _('Nouveau')
         res = super(ReportingTicket, self).create(vals)
         return res
-

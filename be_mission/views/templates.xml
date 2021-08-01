@@ -30,13 +30,16 @@
                                 <div class="col-6">
                                     <table class="table table-responsive" style="border: 2px solid black;">
                                         <tr>
-                                            <td><strong>Nom et Prénom :</strong></td><td> <span t-field="doc.person_name"/></td>
+                                            <td><strong>Nom et Prénom :</strong></td>
+                                            <td> <span t-field="doc.person_name"/></td>
                                         </tr>
                                         <tr>
-                                           <td><strong>Numéro de Passport :</strong></td><td> <span t-field="doc.passport"/></td>
+                                           <td><strong>Numéro de Passport :</strong></td>
+                                            <td> <span t-field="doc.passport"/></td>
                                        </tr>
                                         <tr>
-                                           <td><strong>Date d'Expiration :</strong></td><td> <span t-field="doc.date_exp"/></td>
+                                           <td><strong>Date d'Expiration :</strong></td>
+                                            <td> <span t-field="doc.date_exp"/></td>
                                        </tr>
                                     </table>
                                 </div>
@@ -116,11 +119,11 @@
                                         </tr>
                                         <tr>
                                             <td><strong>Duree de séjour :</strong></td>
-                                            <td colspan="2" class="text-center"> <span t-field="doc.duree_s"/></td>
+                                            <td colspan="2" class="text-center"> <span t-field="doc.duree_s"/> Jours</td>
                                         </tr>
                                         <tr>
                                             <td><strong>Duree de séjour hotel :</strong></td>
-                                            <td colspan="2" class="text-center"> <span t-field="doc.duree_h"/></td>
+                                            <td colspan="2" class="text-center"> <span t-field="doc.duree_h"/> Jours</td>
                                         </tr>
                                         <t t-if="doc.chauffeur">
                                             <tr>
@@ -137,7 +140,7 @@
                                             </tr>
                                             <tr>
                                                 <td><strong>Durée d'util. de Véhicule :</strong></td>
-                                                <td colspan="2" class="text-center"> <span t-field="doc.duree_b"/></td>
+                                                <td colspan="2" class="text-center"> <span t-field="doc.duree_b"/> Jours</td>
                                             </tr>
                                         </t>
                                          <tr>
@@ -309,7 +312,7 @@
                                             </tr>
                                             <tr>
                                                 <td><strong>Durée d'util. de Véhicule :</strong></td>
-                                                <td colspan="2" class="text-center"> <span t-field="doc.duree_b"/></td>
+                                                <td colspan="2" class="text-center"> <span t-field="doc.duree_b"/> Jours</td>
                                             </tr>
                                         </t>
                                          <tr>
@@ -468,7 +471,7 @@
                                             </tr>
                                             <tr>
                                                 <td><strong>Durée d'util. de Véhicule :</strong></td>
-                                                <td colspan="2" class="text-center"> <span t-field="doc.duree_b"/></td>
+                                                <td colspan="2" class="text-center"> <span t-field="doc.duree_b"/> Jours</td>
                                             </tr>
                                             <tr>
                                             <t t-if="doc.p_carburant != 'oui'">
@@ -676,12 +679,36 @@
                                              <td><strong>Date de Voyage :</strong></td>
                                              <td class="text-right"><span t-field="doc.date_a"/></td>
                                          </tr>
-                                         <tr>
-                                             <td><strong>Bénéficiaire :</strong></td>
-                                             <td class="text-left"><span t-field="doc.beneficiaire"/></td>
-                                             <td><strong>Date de Retour :</strong></td>
-                                             <td class="text-right"><span t-field="doc.date_r"/></td>
-                                         </tr>
+
+                                              <t t-if="doc.test_cr != 'oui'">
+                                                <tr>
+                                                    <td><strong>Test COVID :</strong></td>
+                                                    <td class="text-left"><span t-field="doc.test_cr"/></td>
+                                                    <td><strong>Date de Retour :</strong></td>
+                                                    <td class="text-right"><span t-field="doc.date_r"/></td>
+                                                </tr>
+                                              <tr>
+                                                 <td><strong>Bénéficiaire :</strong></td>
+                                                 <td class="text-left"><span t-field="doc.beneficiaire"/></td>
+
+                                             </tr>
+                                            </t>
+                                            <t t-else="">
+                                                 <tr>
+                                                    <td><strong>Test COVID :</strong></td>
+                                                    <td> <span t-field="doc.test_cr"/></td>
+                                                     <td><strong>Date de Retour :</strong></td>
+                                                     <td class="text-right"><span t-field="doc.date_r"/></td>
+                                                 </tr>
+                                                <tr>
+                                                    <td><strong>Date de Test :</strong></td>
+                                                    <td class="text-left"><span t-field="doc.date_cr"/></td>
+                                                </tr>
+                                                <tr>
+                                                  <td><strong>Bénéficiaire :</strong></td>
+                                                 <td class="text-left"><span t-field="doc.beneficiaire"/></td>
+                                                </tr>
+                                            </t>
                                          <tr>
                                              <td><strong>Trajet :</strong></td>
                                              <td class="text-left"><span t-field="doc.trajet"/></td>
@@ -713,6 +740,12 @@
                                                  <td><strong>Montant Billet modifié (Trajet):</strong></td>
                                                  <td class="text-right">
                                                     <span t-field="doc.montant_bmt" t-options='{"widget": "monetary", "display_currency": doc.currency_id}'/>
+                                                 </td>
+                                            </tr>
+                                             <tr class="border-black o_subtotal">
+                                                 <td><strong>Autres Frais:</strong></td>
+                                                 <td class="text-right">
+                                                    <span t-field="doc.autres_frais" t-options='{"widget": "monetary", "display_currency": doc.currency_id}'/>
                                                  </td>
                                             </tr>
                                              <tr class="border-black o_total">

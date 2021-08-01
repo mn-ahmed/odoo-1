@@ -146,16 +146,17 @@ class CommandeMateriel(models.Model):
     def recu_user(self):
         for rec in self:
             user = rec.env.user
-            if rec.employee_id.user_id != user or rec.department_id.manager_id.user_id != user:
-                raise Warning(
-                    _('Vous n\'êtes pas autorisé de passer cette action !!'))
-            else:
+            emplyer = rec.employee_id.user_id
+            departement_manger = rec.department_id.manager_id.user_id
+            if emplyer == user or departement_manger == user:
                 if rec.satisfaction == 'non':
                     raise Warning(
-                        _('Veuillez selectionner votre niveau de satisfaction !!'))
-                else:
-                    rec.date_recep = fields.Date.today()
-                    rec.state = 'recu'
+                                 _('Veuillez selectionner votre niveau de satisfaction !!'))
+                rec.date_recep = fields.Date.today()
+                rec.state = 'recu'
+            else:
+                raise Warning(
+                    _('Vous n\'êtes pas autorisé de passer cette action !!'))
 
 
     def reject_commande(self):

@@ -32,31 +32,44 @@
           <field name="model">voyage.vacance</field>
           <field name="arch" type="xml">
             <form string="Frais Billet Avions">
-            <sheet>
+             <header>
+                <button name="valider" type="object" string="Valider" states="draft"
+                        class="btn-primary" />
+                <field name="state" widget="statusbar" string="confirme"
+                       statusbar_visible="draft,valider"
+                       />
+              </header>
+                <sheet>
               <div class="oe_title">
                   <h1>
                     <field name="name" readonly="1"/>
                   </h1>
                 </div>
               <group>
-                <group>
+                <group attrs="{'readonly':[('state', '!=', 'draft')]}" >
                   <field name="employee_id"/>
                   <field name="beneficiaire" />
                   <field name="trajet"/>
                   <field name="nature"/>
                 </group>
-                <group>
+                <group attrs="{'readonly':[('state', '!=', 'draft')]}" >
                   <field name="date_a"/>
                   <field name="date_r"/>
+                     <label for="test_cr" string="Test COVID / Date"/>
+                      <div class="o_row" name="test_cr" >
+                          <field name="test_cr"/>
+                          <field name="date_cr" attrs="{'invisible':[('test_cr', 'not in',('oui'))]}"/>
+                      </div>
 
                 </group>
               </group>
-              <group>
+              <group attrs="{'readonly':[('state', '!=', 'draft')]}" >
                 <group></group>
                 <group class="oe_subtotal_footer">
                   <field name="montant_b" widget="monetary"/>
                   <field name="montant_bm" widget="monetary"/>
                   <field name="montant_bmt" widget="monetary"/>
+                    <field name="autres_frais" widget="monetary"/>
                   <field name="montant_total" widget="monetary"/>
                 </group>
                 <field name="currency_id" invisible="1"/>
