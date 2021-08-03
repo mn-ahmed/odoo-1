@@ -364,11 +364,11 @@
                 <group>
                   <group>
                     <field name="date_depart" attrs="{'readonly': [('state', 'not in', ('draft','depart'))]}"/>
-                    <label for="test_cd" string="Test COVID / Date"/>
-                    <div class="o_row" name="test_cd" >
-                      <field name="test_cd" attrs="{'readonly': [('state', 'not in', ('draft','depart'))]}"/>
-                      <field name="date_cd" attrs="{'invisible':[('test_cd', 'not in', 'oui')],'readonly': [('state', 'not in', ('draft','depart'))]}"/>
-                    </div>
+<!--                    <label for="test_cd" string="Test COVID / Date"/>-->
+<!--                    <div class="o_row" name="test_cd" >-->
+<!--                      <field name="test_cd" attrs="{'readonly': [('state', 'not in', ('draft','depart'))]}"/>-->
+<!--                      <field name="date_cd" attrs="{'invisible':[('test_cd', 'not in', 'oui')],'readonly': [('state', 'not in', ('draft','depart'))]}"/>-->
+<!--                    </div>-->
                     <label for="o_mission" string="Ordre de mission"/>
                     <div class="o_row" name="o_mission">
                       <field name="o_mission" attrs="{'readonly': [('state', 'not in', ('draft','depart'))]}"/>
@@ -418,11 +418,11 @@
                     <field name="date_retour" attrs="{'readonly': [('state', 'not in', ('retour'))]}"/>
                   </group>
                   <group>
-                    <label for="test_cr" string="Test COVID / Date"/>
-                    <div class="o_row" name="test_cr" >
-                      <field name="test_cr" attrs="{'readonly': [('state', 'not in', ('retour'))]}"/>
-                      <field name="date_cr" attrs="{'invisible':[('test_cr', 'not in', 'oui')],'readonly': [('state', 'not in', ('retour'))]}"/>
-                    </div>
+<!--                    <label for="test_cr" string="Test COVID / Date"/>-->
+<!--                    <div class="o_row" name="test_cr" >-->
+<!--                      <field name="test_cr" attrs="{'readonly': [('state', 'not in', ('retour'))]}"/>-->
+<!--                      <field name="date_cr" attrs="{'invisible':[('test_cr', 'not in', 'oui')],'readonly': [('state', 'not in', ('retour'))]}"/>-->
+<!--                    </div>-->
                   </group>
                 </group>
                 <group>

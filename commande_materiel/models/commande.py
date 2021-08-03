@@ -74,31 +74,31 @@ class CommandeMateriel(models.Model):
                                             string='Lignes des Commandes',
                                             copy=True,)
     commentaire = fields.Text('Commentaire', required=False)
-    # rejet = fields.Selection(
-    #     string='Rejet',
-    #     selection=[('oui', 'Oui'),
-    #                ('non', 'Non'), ],
-    #     required=False, default='non', )
-    #rejet = fields.Boolean(string='Rejet', required=False, default=False)
     motifrejet = fields.Char(string="Motif de Rejet",
                              required=False)
-
     satisfaction = fields.Selection(string='Satisfaction',
                                     selection=[('non',' '),
                                                 ('satisfait', 'Satisfait'),
                                                 ('non_satisfait', 'Non Satisfait')],
                                     required=False,
                                     default='non')
-
     state = fields.Selection([('draft', 'Nouveau'),
                                 ('en_cours', 'En Cours Départ.'),
                                 ('accepter','Accepter'),
                                 ('approuver', 'Approuver'),
+                                ('picking', 'Transfert interne créé'),
                                 ('rejeter', 'Rejeter'),
                                 ('recu', 'Reçu'),
                                 ('annulee', 'Annuler')],
                              default='draft',
                              track_visibility='onchange', )
+    picking_count = fields.Integer(compute='compute_pick_count')
+    custom_picking_type_id = fields.Many2one('stock.picking.type', string='Picking Type', copy=False,)
+    location_id = fields.Many2one('stock.location', string='Source', copy=True)
+    dest_location_id = fields.Many2one('stock.location', string='Destination', required=False, copy=True,)
+    delivery_picking_id = fields.Many2one('stock.picking', sring='Transfert Interne',readonly=True, copy=False)
+    pick_confirmed = fields.Boolean(compute='get_pick_status', default=False)
+
 
     @api.model
     def create(self, vals):
@@ -143,6 +143,60 @@ class CommandeMateriel(models.Model):
                 raise Warning(
                     _('Désolé mais vous ne pouvez pas approuver votre propre demande'))
 
+    def compute_pick_count(self):
+        for rec in self:
+            order_count = self.env['stock.picking'].search_count([('origin', '=', rec.name)])
+            rec.picking_count = order_count
+
+    @api.model
+    def _prepare_pick_vals(self, line=False, stock_id=False):
+        pick_vals = {
+            'product_id': line.product_id.id,
+            'product_uom_qty': line.qty,
+            'product_uom': line.uom.id,
+            'location_id': self.location_id.id,
+            'location_dest_id': self.dest_location_id.id,
+            'name': line.product_id.name,
+            'picking_type_id': self.custom_picking_type_id.id,
+            'picking_id': stock_id.id,
+            'commande_line_id': line.id,
+
+        }
+        return pick_vals
+
+    def request_stock(self):
+        stock_obj = self.env['stock.picking']
+        move_obj = self.env['stock.move']
+        for rec in self:
+            if not rec.commande_line_ids:
+                raise Warning(_('Veuillez créer des lignes de demande,'))
+            if not rec.location_id:
+                raise Warning(_('Veuillez sélectionneer l\'emplacement source'))
+            if not rec.custom_picking_type_id.id:
+                raise Warning(_('Veuillez sélectionneer le type d\'opération.'))
+            if not rec.dest_location_id:
+                raise Warning(_('Veuillez sélectionneer l\'emplacement de destination'))
+            picking_valus = {
+                'partner_id' : rec.employee_id.sudo().address_home_id.id,
+                #'min_date' : fields.Date.today(),
+                'location_id' : rec.location_id.id,
+                'location_dest_id' : rec.dest_location_id and rec.dest_location_id.id or rec.employee_id.dest_location_id.id or rec.employee_id.department_id.dest_location_id.id,
+                'picking_type_id' : rec.custom_picking_type_id.id,#internal_obj.id,
+                'note' : rec.commentaire,
+                'commande_id' : rec.id,
+                'origin' : rec.name,
+
+            }
+            stock_id = stock_obj.sudo().create(picking_valus)
+            livraison_vals = {
+                'delivery_picking_id' : stock_id.id,
+            }
+            rec.write(livraison_vals)
+        for line in rec.commande_line_ids:
+            pick_vals = rec._prepare_pick_vals(line, stock_id)
+            move_id = move_obj.sudo().create(pick_vals)
+            rec.state = 'picking'
+
     def recu_user(self):
         for rec in self:
             user = rec.env.user
@@ -173,27 +227,85 @@ class CommandeMateriel(models.Model):
         for rec in self:
             rec.state = 'annuler'
 
+    def show_picking(self):
+        for rec in self:
+            res = self.env.ref('stock.action_picking_tree_all')
+            res = res.read()[0]
+            res['domain'] = str([('commande_id','=', rec.id)])
+            res['context'] = "{'create': False}"
+        return res
+
+    def get_pick_status(self):
+        for rec in self:
+            commande_pick = rec.env['stock.picking'].search([('origin', '=', rec.name)])
+            comm_pick_state = commande_pick.filtered(lambda r : r.state == 'done')
+            if rec.state == 'picking':
+                if len(commande_pick) >= 1:
+                    if len(commande_pick) == len(comm_pick_state):
+                        rec.pick_confirmed = True
+                    else:
+                        rec.pick_confirmed = False
+                else:
+                    rec.pick_confirmed = False
+            else:
+                rec.pick_confirmed = False
+
+        # def allow_edit_line(self):
+        #     for rec in self:
+        #         if rec.state == 'dept_confirm':
+        #             if rec.env.user.has_group(
+        #                     'material_purchase_requisitions.group_purchase_requisition_department') and rec.state == 'dept_confirm':
+        #                 rec.dept_manager = True
+        #                 rec.edit_pick_detail = False
+        #             else:
+        #                 rec.dept_manager = False
+        #                 rec.edit_pick_detail = False
+        #
+        #         elif rec.state == 'draft':
+        #             rec.dept_manager = True
+        #             rec.edit_pick_detail = False
+        #         elif rec.state == 'approve':
+        #             if rec.env.user.has_group(
+        #                     'material_purchase_requisitions.group_purchase_requisition_manager') or rec.env.user.has_group(
+        #                     'material_purchase_requisitions.group_store_keeper'):
+        #                 rec.dept_manager = True
+        #                 rec.aprove_state_edit_check = True
+        #
+        #                 if rec.env.user.has_group('material_purchase_requisitions.group_store_keeper'):
+        #                     if rec.requi_act_ip == True:
+        #                         rec.edit_pick_detail = True
+        #                     else:
+        #                         rec.edit_pick_detail = False
+        #             else:
+        #                 rec.dept_manager = False
+        #                 rec.aprove_state_edit_check = False
+        #                 rec.edit_pick_detail = False
+        #
+        #         else:
+        #             rec.dept_manager = False
+        #             rec.aprove_state_edit_check = False
+        #             rec.edit_pick_detail = False
+
+
 
 class CommandeMaterielLine(models.Model):
     _name = "commande.materiel.line"
     _description = 'Commande Materie Lines'
 
     commande_id = fields.Many2one('commande.materiel', string='Commande',)
-    product_id = fields.Many2one('product.product',
-                                 string='Product',
-                                )
+    product_id = fields.Many2one('product.product', string='Product',)
     description = fields.Char(string='Description', required=True,)
     qty = fields.Float(string='Quantity', default=1, required=True,)
     uom = fields.Many2one('uom.uom', string='Unit of Measure', required=True,)
+    commande_picking = fields.Boolean(string='Commande type',  required=False, default=True)
+
     commande_type = fields.Selection(selection=[('internal', 'Internal Picking'),
                                                 ('purchase', 'Purchase Order'),],
-                                     string='Requisition Action',)
+                                                string='Requisition Action',)
 
     @api.onchange('product_id')
     def onchange_product_id(self):
         for rec in self:
             if rec.product_id:
-
                 rec.description = rec.product_id.name
                 rec.uom = rec.product_id.uom_id.id
-

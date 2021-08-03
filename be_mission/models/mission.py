@@ -278,13 +278,13 @@ class MissionOrdinaire(models.Model):
     responsable = fields.Char(string='Nom de Responsable', required=False)
     post = fields.Char(string='Post de responsable', required=False)
 
-    test_cr = fields.Selection(string='Test COVID', selection=[(
-        'oui', 'Oui'), ('non', 'Non')], required=False, )
-    date_cr = fields.Date(string='Date de test covid', required=False)
-
-    test_cd = fields.Selection(string='Test COVID', selection=[(
-        'oui', 'Oui'), ('non', 'Non')], required=False, )
-    date_cd = fields.Date(string='Date de test covid', required=False)
+    # test_cr = fields.Selection(string='Test COVID', selection=[(
+    #     'oui', 'Oui'), ('non', 'Non')], required=False, )
+    # date_cr = fields.Date(string='Date de test covid', required=False)
+    #
+    # test_cd = fields.Selection(string='Test COVID', selection=[(
+    #     'oui', 'Oui'), ('non', 'Non')], required=False, )
+    # date_cd = fields.Date(string='Date de test covid', required=False)
 
     frais_m = fields.Selection(string='Frais de Mission', selection=[
         ('oui', 'Oui'), ('non', 'Non')], required=False, )

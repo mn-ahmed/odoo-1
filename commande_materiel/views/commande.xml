@@ -23,10 +23,11 @@
                         class="btn-primary" groups="commande_materiel.group_commande_materiel_respo_depart,commande_materiel.group_commande_materiel_csa"/>
                 <button name="confirme_manager" type="object" string="Manager Confirmation" states="accepter" class="btn-primary"
                         groups="commande_materiel.group_commande_materiel_csa,commande_materiel.group_commande_materiel_daf" />
-                <button name="reject_commande" type="object" string="Rejet"
-                        attrs="{'invisible':[('state', 'not in', ('en_cours','accepter'))]}"
+                <button name="request_stock" type="object" string="Créer Transfert Interne" attrs="{'invisible': [('state','!=','approuver')]}" class="btn-primary"
+                        groups="commande_materiel.group_commande_materiel_csa,commande_materiel.group_commande_materiel_daf"/>
+                <button name="reject_commande" type="object" string="Rejet"  attrs="{'invisible':[('state', 'not in', ('en_cours','accepter'))]}"
                         groups="commande_materiel.group_commande_materiel_daf,commande_materiel.group_commande_materiel_csa,commande_materiel.group_commande_materiel_respo_depart" />
-                <button name="recu_user" type="object" string="Reçu" states="approuver" class="btn-primary"
+                <button name="recu_user" type="object" string="Reçu" states="picking" class="btn-primary"
                         groups="base.group_user" />
                 <button name="annulee_commande" type="object" string="Annulée" states="draft"/>
                 <field name="state" widget="statusbar" string="confirme"
@@ -34,6 +35,12 @@
                        />
               </header>
                 <sheet>
+                     <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" type="object" icon="fa-truck"
+                                name="show_picking">
+                                <field  name="picking_count" string="Internal Picking" widget="statinfo" />
+                        </button>
+                    </div>
                    <div class="oe_title">
                         <div class="oe_title">
                         <h1>
@@ -60,9 +67,23 @@
                             <field name="description" />
                             <field name="qty" />
                             <field name="uom" />
+                              <field name="commande_picking" invisible="1"/>
                           </tree>
                         </field>
                       </page>
+                        <page string="Details de Transfert" attrs="{'readonly': [['state', 'in', ['recu']]]}">
+                                <group>
+                                    <group>
+                                            <field name="location_id"/>
+                                    </group>
+                                    <group>
+                                        <field name="dest_location_id" />
+                                        <field name="delivery_picking_id"/>
+                                        <field name="custom_picking_type_id" />
+                                    </group>
+                                </group>
+                            </page>
+
                       <page string="Autres Informations">
                         <group>
                           <group>
@@ -85,7 +106,7 @@
                           <field name="commentaire" attrs="{'readonly':[('state', '!=', 'draft')]}" placeholder=""/>
                       </group>
                       <group>
-                          <field name="satisfaction" attrs="{'invisible':[('state', 'not in', ('recu','approuver'))],'readonly':[('state', '!=', 'approuver')]}" />
+                          <field name="satisfaction" attrs="{'invisible':[('state', 'not in', ('recu','picking'))],'readonly':[('state', '!=', 'picking')]}" />
                           <field name="motifrejet" groups="commande_materiel.group_commande_materiel_csa,commande_materiel.group_commande_materiel_respo_depart,commande_materiel.group_commande_materiel_daf"
                                  attrs="{'invisible':[('state', 'not in', ('en_cours','accepter','rejeter'))],'readonly':[('state', '==', 'rejeter')]}" />
                       </group>
@@ -123,6 +144,7 @@
                 </graph>
             </field>
         </record>
+
         <record model="ir.ui.view" id="view_commande_materiel_pivot">
             <field name="name">commande.materiel.pivot</field>
             <field name="model">commande.materiel</field>

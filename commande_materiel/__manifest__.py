@@ -21,6 +21,7 @@
         'security/ir.model.access.csv',
         'data/commande_sequence.xml',
         'views/commande.xml',
+        'views/stock_picking_view.xml',
         'views/templates.xml',
     ],
     # only loaded in demonstration mode
