@@ -92,7 +92,9 @@ class MissionExterne(models.Model):
         ('cancel', 'Annuler')],
         default='draft',
         track_visibility='onchange', )
-    jours = fields.Char(string='Jours', required=False, default='Jours')
+    unity_sejour = fields.Char(string='Jours', required=False, default='jours')
+    unity_sejour_hotel = fields.Char(string='Jours', required=False, default='jours')
+    unity_duree_vehicule = fields.Char(string='Jours', required=False, default='jours')
 
     def unlink(self):
         for rec in self:
@@ -100,6 +102,22 @@ class MissionExterne(models.Model):
                 raise Warning(
                     _('Vous ne pouvez pas supprimer un formulaire valider'))
         return super(MissionExterne, self).unlink()
+
+    @api.onchange('date_arriver', 'date_ca')
+    def onchange_date_depart_covid(self):
+        for rec in self:
+            if rec.date_arriver < rec.date_ca:
+                raise Warning(_('La date "Test Covid" doit être avant la date d\'arrivéé'))
+            else:
+                pass
+
+    @api.onchange('date_depart', 'date_ca')
+    def onchange_date_depart_covid(self):
+        for rec in self:
+            if rec.date_depart < rec.date_ca:
+                raise Warning(_('La date "Test Covid" doit être avant la date de départ'))
+            else:
+                pass
 
     @api.model
     def create(self, vals):
@@ -156,6 +174,7 @@ class MissionInterne(models.Model):
         required=False)
     billet = fields.Selection(string='Achat Billet d\'avion', selection=[
         ('oui', 'Oui'), ('non', 'Non')], required=False, )
+    date_achat_billet = fields.Date(string='Date achat billet',  required=False)
     visa = fields.Selection(string='Visa', selection=[('oui', 'Oui'), ('non', 'Non')], required=False)
     date_visa = fields.Date(string='Date', required=False)
 
@@ -214,6 +233,22 @@ class MissionInterne(models.Model):
             'mission.interne') or _('Nouveau')
         res = super(MissionInterne, self).create(vals)
         return res
+
+    @api.onchange('date_retour', 'date_cr')
+    def onchange_date_depart_covid(self):
+        for rec in self:
+            if rec.date_retour < rec.date_cr:
+                raise Warning(_('La date "Test Covid" doit être avant la date d\'arrivéé'))
+            else:
+                pass
+
+    @api.onchange('date_depart', 'date_cd')
+    def onchange_date_depart_covid(self):
+        for rec in self:
+            if rec.date_depart < rec.date_cd:
+                raise Warning(_('La date "Test Covid" doit être avant la date de départ'))
+            else:
+                pass
 
     def action_depart(self):
         for rec in self:
