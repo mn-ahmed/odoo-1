@@ -90,15 +90,15 @@
                           </group>
                         </group>
                       </page>
-                        <page string="Details de Transfert" groups="commande_materiel.group_commande_materiel_csa,commande_materiel.group_commande_materiel_employee">
+                        <page string="Details de Transfert" attrs="{'invisible':[('state', '!=', 'approuver')]}" groups="commande_materiel.group_commande_materiel_csa,commande_materiel.group_commande_materiel_employee">
                                 <group>
                                     <group>
                                             <field name="location_id"/>
                                     </group>
                                     <group>
                                         <field name="dest_location_id" />
-                                        <field name="delivery_picking_id"/>
-                                        <field name="custom_picking_type_id" groups="base.group_user"/>
+                                        <field name="delivery_picking_id" string="Transfert N:"/>
+                                        <field name="custom_picking_type_id" string="Type d\'opération" groups="base.group_user"/>
                                     </group>
                                 </group>
                             </page>

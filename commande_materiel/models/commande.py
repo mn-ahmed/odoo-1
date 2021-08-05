@@ -93,12 +93,17 @@ class CommandeMateriel(models.Model):
                              default='draft',
                              track_visibility='onchange', )
     picking_count = fields.Integer(compute='compute_pick_count')
-    custom_picking_type_id = fields.Many2one('stock.picking.type', string='Picking Type', copy=False,)
+    custom_picking_type_id = fields.Many2one('stock.picking.type',
+                                             string='Type d\'operation',
+                                             default=lambda self: self.env['stock.picking.type'].search([('code','=','internal')], limit=1), copy=False,)
     location_id = fields.Many2one('stock.location', string='Source', copy=True)
     dest_location_id = fields.Many2one('stock.location', string='Destination', required=False, copy=True,)
     delivery_picking_id = fields.Many2one('stock.picking', sring='Transfert Interne',readonly=True, copy=False)
     pick_confirmed = fields.Boolean(compute='get_pick_status', default=False)
     change_commande_line = fields.Boolean('Change liste Commande', compute='allow_edit_line', default=False)
+
+    def _default_value(self):
+        return self.env['stock.picking.type'].search([('code','=','internal')], limit=1)
 
 
     @api.model
