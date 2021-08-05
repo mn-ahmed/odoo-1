@@ -19,7 +19,7 @@
               <header>
                 <button name="confirme_user" type="object" string="Confimer" states="draft"
                         class="btn-primary" groups="base.group_user"/>
-                <button name="confirme_depart" type="object" string="Départ. Confimation" states="en_cours,annulee"
+                <button name="confirme_depart" type="object" string="Départ. Confimation" states="en_cours,annuler"
                         class="btn-primary" groups="commande_materiel.group_commande_materiel_respo_depart,commande_materiel.group_commande_materiel_csa"/>
                 <button name="confirme_manager" type="object" string="Manager Confirmation" states="accepter" class="btn-primary"
                         groups="commande_materiel.group_commande_materiel_csa,commande_materiel.group_commande_materiel_daf" />
@@ -27,8 +27,8 @@
                         groups="commande_materiel.group_commande_materiel_csa,commande_materiel.group_commande_materiel_daf"/>
                 <button name="reject_commande" type="object" string="Rejet"  attrs="{'invisible':[('state', 'not in', ('en_cours','accepter'))]}"
                         groups="commande_materiel.group_commande_materiel_daf,commande_materiel.group_commande_materiel_csa,commande_materiel.group_commande_materiel_respo_depart" />
-                <button name="recu_user" type="object" string="Reçu" states="picking" class="btn-primary"
-                        groups="base.group_user" />
+                <button name="recu_user" type="object" string="Reçu" attrs="{'invisible': ['|',('pick_confirmed', '=', False),('state' , '!=', 'picking')]}"
+                        class="btn-primary" groups="base.group_user" />
                 <button name="annulee_commande" type="object" string="Annulée" states="draft"/>
                 <field name="state" widget="statusbar" string="confirme"
                        statusbar_visible="draft,en_cours,accepter,approuver,recu"
@@ -37,8 +37,8 @@
                 <sheet>
                      <div class="oe_button_box" name="button_box">
                         <button class="oe_stat_button" type="object" icon="fa-truck"
-                                name="show_picking">
-                                <field  name="picking_count" string="Internal Picking" widget="statinfo" />
+                                name="show_picking" groups="base.group_user">
+                                <field  name="picking_count" string="Transfert Interne" widget="statinfo" />
                         </button>
                     </div>
                    <div class="oe_title">
@@ -51,8 +51,10 @@
                   <div>
                     <group>
                       <group>
-                        <field name="employee_id" attrs="{'readonly':[('state', '!=', 'draft')]}" />
-                        <field name="department_id" attrs="{'readonly':[('state', '!=', 'draft')]}" />
+                          <field name="pick_confirmed" invisible="0" />
+                          <field name="change_commande_line" invisible="0"/>
+                          <field name="employee_id" attrs="{'readonly':[('state', '!=', 'draft')]}" />
+                          <field name="department_id" attrs="{'readonly':[('state', '!=', 'draft')]}" />
                       </group>
                       <group>
                         <field name="date" attrs="{'readonly':[('state', '!=', 'draft')]}" />
@@ -61,7 +63,7 @@
                     </group>
                     <notebook>
                       <page string="Lignes des Commande">
-                        <field name="commande_line_ids" attrs="{'readonly': [('state', '!=', 'draft')]}">
+                        <field name="commande_line_ids" attrs="{'readonly': ['|', ('state', 'in', ('recu','en_cours')),('change_commande_line', '=', False)]}">
                           <tree editable="bottom">
                             <field name="product_id" />
                             <field name="description" />
@@ -71,18 +73,6 @@
                           </tree>
                         </field>
                       </page>
-                        <page string="Details de Transfert" attrs="{'readonly': [['state', 'in', ['recu']]]}">
-                                <group>
-                                    <group>
-                                            <field name="location_id"/>
-                                    </group>
-                                    <group>
-                                        <field name="dest_location_id" />
-                                        <field name="delivery_picking_id"/>
-                                        <field name="custom_picking_type_id" />
-                                    </group>
-                                </group>
-                            </page>
 
                       <page string="Autres Informations">
                         <group>
@@ -100,6 +90,19 @@
                           </group>
                         </group>
                       </page>
+                        <page string="Details de Transfert" groups="commande_materiel.group_commande_materiel_csa,commande_materiel.group_commande_materiel_employee">
+                                <group>
+                                    <group>
+                                            <field name="location_id"/>
+                                    </group>
+                                    <group>
+                                        <field name="dest_location_id" />
+                                        <field name="delivery_picking_id"/>
+                                        <field name="custom_picking_type_id" groups="base.group_user"/>
+                                    </group>
+                                </group>
+                            </page>
+
                     </notebook>
                     <group>
                       <group>
@@ -201,12 +204,17 @@
       <field name="res_model">commande.materiel</field>
       <field name="view_mode">tree,form</field>
         <field name="context">{'create': False}</field>
-        <field name="domain">[('state', 'not in', ('draft','rejeter','recu','annulee'))]</field>
+        <field name="domain">[('state', 'not in', ('draft','rejeter','recu','annuler'))]</field>
     </record>
+
 
     <menuitem name="Les Commandes à Confirmer" id="commande_materiel_commande_to_validate" parent="commande_materiel_menu_root" sequence="30"
               action="commande_materiel_action_window_to_validate"
               groups="commande_materiel.group_commande_materiel_daf,commande_materiel.group_commande_materiel_respo_depart,commande_materiel.group_commande_materiel_csa" />
+
+      <menuitem name="Inventory" id="stock.menu_stock_root" sequence="30"
+        groups="commande_materiel.group_commande_materiel_employee"
+        web_icon="stock,static/description/icon.png"/>
 
   </data>
 </odoo>

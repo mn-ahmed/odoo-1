@@ -13,15 +13,17 @@
     'website': "",
     'category': 'Human Resources',
     'version': '0.1',
-    'depends': ['stock',
-                'hr',
-                ],
+    'depends': [
+        'stock',
+        'hr',
+        ],
     'data': [
         'security/security.xml',
         'security/ir.model.access.csv',
         'data/commande_sequence.xml',
-        'views/commande.xml',
+        'views/commande_view.xml',
         'views/stock_picking_view.xml',
+        'views/hr_emplyee_view.xml',
         'views/templates.xml',
     ],
     # only loaded in demonstration mode

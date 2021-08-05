@@ -106,7 +106,7 @@ class MissionExterne(models.Model):
     @api.onchange('date_arriver', 'date_ca')
     def onchange_date_depart_covid(self):
         for rec in self:
-            if rec.date_arriver < rec.date_ca:
+            if rec.date_arriver and rec.date_ca and rec.date_arriver < rec.date_ca:
                 raise Warning(_('La date "Test Covid" doit être avant la date d\'arrivéé'))
             else:
                 pass
@@ -114,7 +114,7 @@ class MissionExterne(models.Model):
     @api.onchange('date_depart', 'date_ca')
     def onchange_date_depart_covid(self):
         for rec in self:
-            if rec.date_depart < rec.date_ca:
+            if rec.date_depart and rec.date_ca and rec.date_depart < rec.date_ca:
                 raise Warning(_('La date "Test Covid" doit être avant la date de départ'))
             else:
                 pass
@@ -237,7 +237,7 @@ class MissionInterne(models.Model):
     @api.onchange('date_retour', 'date_cr')
     def onchange_date_depart_covid(self):
         for rec in self:
-            if rec.date_retour < rec.date_cr:
+            if rec.date_retour and rec.date_cr and rec.date_retour < rec.date_cr:
                 raise Warning(_('La date "Test Covid" doit être avant la date d\'arrivéé'))
             else:
                 pass
@@ -245,7 +245,7 @@ class MissionInterne(models.Model):
     @api.onchange('date_depart', 'date_cd')
     def onchange_date_depart_covid(self):
         for rec in self:
-            if rec.date_depart < rec.date_cd:
+            if rec.date_depart and rec.date_cd and rec.date_depart < rec.date_cd:
                 raise Warning(_('La date "Test Covid" doit être avant la date de départ'))
             else:
                 pass

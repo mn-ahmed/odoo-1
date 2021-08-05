@@ -2,3 +2,4 @@
 
 from . import commande
 from . import stock_picking
+from . import hr_emplyee

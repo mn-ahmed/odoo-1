@@ -86,10 +86,10 @@ class CommandeMateriel(models.Model):
                                 ('en_cours', 'En Cours Départ.'),
                                 ('accepter','Accepter'),
                                 ('approuver', 'Approuver'),
-                                ('picking', 'Transfert interne créé'),
+                                ('picking', 'Attendre la Réception'),
                                 ('rejeter', 'Rejeter'),
                                 ('recu', 'Reçu'),
-                                ('annulee', 'Annuler')],
+                                ('annuler', 'Annuler')],
                              default='draft',
                              track_visibility='onchange', )
     picking_count = fields.Integer(compute='compute_pick_count')
@@ -98,6 +98,7 @@ class CommandeMateriel(models.Model):
     dest_location_id = fields.Many2one('stock.location', string='Destination', required=False, copy=True,)
     delivery_picking_id = fields.Many2one('stock.picking', sring='Transfert Interne',readonly=True, copy=False)
     pick_confirmed = fields.Boolean(compute='get_pick_status', default=False)
+    change_commande_line = fields.Boolean('Change liste Commande', compute='allow_edit_line', default=False)
 
 
     @api.model
@@ -113,6 +114,7 @@ class CommandeMateriel(models.Model):
     def set_department(self):
         for rec in self:
             rec.department_id = rec.employee_id.sudo().department_id.id
+            rec.dest_location_id = rec.employee_id.sudo().dest_location_id.id or rec.employee_id.sudo().department_id.dest_location_id.id
 
     # confirm button
     def confirme_user(self):
@@ -229,7 +231,7 @@ class CommandeMateriel(models.Model):
 
     def show_picking(self):
         for rec in self:
-            res = self.env.ref('stock.action_picking_tree_all')
+            res = self.env.ref('stock.action_picking_tree_all').sudo()
             res = res.read()[0]
             res['domain'] = str([('commande_id','=', rec.id)])
             res['context'] = "{'create': False}"
@@ -250,42 +252,22 @@ class CommandeMateriel(models.Model):
             else:
                 rec.pick_confirmed = False
 
-        # def allow_edit_line(self):
-        #     for rec in self:
-        #         if rec.state == 'dept_confirm':
-        #             if rec.env.user.has_group(
-        #                     'material_purchase_requisitions.group_purchase_requisition_department') and rec.state == 'dept_confirm':
-        #                 rec.dept_manager = True
-        #                 rec.edit_pick_detail = False
-        #             else:
-        #                 rec.dept_manager = False
-        #                 rec.edit_pick_detail = False
-        #
-        #         elif rec.state == 'draft':
-        #             rec.dept_manager = True
-        #             rec.edit_pick_detail = False
-        #         elif rec.state == 'approve':
-        #             if rec.env.user.has_group(
-        #                     'material_purchase_requisitions.group_purchase_requisition_manager') or rec.env.user.has_group(
-        #                     'material_purchase_requisitions.group_store_keeper'):
-        #                 rec.dept_manager = True
-        #                 rec.aprove_state_edit_check = True
-        #
-        #                 if rec.env.user.has_group('material_purchase_requisitions.group_store_keeper'):
-        #                     if rec.requi_act_ip == True:
-        #                         rec.edit_pick_detail = True
-        #                     else:
-        #                         rec.edit_pick_detail = False
-        #             else:
-        #                 rec.dept_manager = False
-        #                 rec.aprove_state_edit_check = False
-        #                 rec.edit_pick_detail = False
-        #
-        #         else:
-        #             rec.dept_manager = False
-        #             rec.aprove_state_edit_check = False
-        #             rec.edit_pick_detail = False
-
+    def allow_edit_line(self):
+        for rec in self:
+            if rec.state == 'draft':
+                rec.change_commande_line = True
+            elif rec.state == 'accepter':
+                if (rec.env.user.has_group('commande_materiel.group_commande_materiel_csa') or rec.env.user.has_group('commande_materiel.group_commande_materiel_daf')) and rec.state == 'accepter':
+                    rec.change_commande_line = True
+                else:
+                    rec.change_commande_line = False
+            elif rec.state == 'approuver':
+                if (rec.env.user.has_group('commande_materiel.group_commande_materiel_csa') or rec.env.user.has_group('commande_materiel.group_commande_materiel_daf')) and rec.state == 'approuver':
+                    rec.change_commande_line = True
+                else:
+                    rec.change_commande_line = False
+            else:
+                rec.change_commande_line = False
 
 
 class CommandeMaterielLine(models.Model):
