@@ -51,8 +51,8 @@
                   <div>
                     <group>
                       <group>
-                          <field name="pick_confirmed" invisible="0" />
-                          <field name="change_commande_line" invisible="0"/>
+                          <field name="pick_confirmed" invisible="1" />
+                          <field name="change_commande_line" invisible="1"/>
                           <field name="employee_id" attrs="{'readonly':[('state', '!=', 'draft')]}" />
                           <field name="department_id" attrs="{'readonly':[('state', '!=', 'draft')]}" />
                       </group>

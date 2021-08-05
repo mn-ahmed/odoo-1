@@ -92,9 +92,21 @@ class MissionExterne(models.Model):
         ('cancel', 'Annuler')],
         default='draft',
         track_visibility='onchange', )
-    unity_sejour = fields.Char(string='Jours', required=False, default='jours')
-    unity_sejour_hotel = fields.Char(string='Jours', required=False, default='jours')
-    unity_duree_vehicule = fields.Char(string='Jours', required=False, default='jours')
+    unity_sejour = fields.Selection([('jours','jours'),
+                                     ('semaines','semaines'),
+                                     ('mois','mois'),
+                                     ('année','années')],
+                                    required=False, default='jours')
+    unity_sejour_hotel =  fields.Selection([('jours','jours'),
+                                     ('semaines','semaines'),
+                                     ('mois','mois'),
+                                     ('année','années')],
+                                    required=False, default='jours')
+    unity_duree_vehicule =  fields.Selection([('jours','jours'),
+                                     ('semaines','semaines'),
+                                     ('mois','mois'),
+                                     ('année','années')],
+                                             required=False, default='jours')
 
     def unlink(self):
         for rec in self:
@@ -104,17 +116,17 @@ class MissionExterne(models.Model):
         return super(MissionExterne, self).unlink()
 
     @api.onchange('date_arriver', 'date_ca')
-    def onchange_date_depart_covid(self):
+    def onchange_date_arriver_covid(self):
         for rec in self:
             if rec.date_arriver and rec.date_ca and rec.date_arriver < rec.date_ca:
                 raise Warning(_('La date "Test Covid" doit être avant la date d\'arrivéé'))
             else:
                 pass
 
-    @api.onchange('date_depart', 'date_ca')
+    @api.onchange('date_depart', 'date_cd')
     def onchange_date_depart_covid(self):
         for rec in self:
-            if rec.date_depart and rec.date_ca and rec.date_depart < rec.date_ca:
+            if rec.date_depart and rec.date_cd and rec.date_depart < rec.date_cd:
                 raise Warning(_('La date "Test Covid" doit être avant la date de départ'))
             else:
                 pass
@@ -218,7 +230,12 @@ class MissionInterne(models.Model):
         ('cancel', 'Annuler')],
         default='draft',
         track_visibility='onchange', )
-    jours = fields.Char(string='Jours', required=False, default='Jours')
+    #jours = fields.Char(string='Jours', required=False, default='Jours')
+    unity_duree_vehicule = fields.Selection([('jours', 'jours'),
+                                             ('semaines', 'semaines'),
+                                             ('mois', 'mois'),
+                                             ('année', 'années')],
+                                            required=False, default='jours')
 
     def unlink(self):
         for rec in self:
@@ -235,7 +252,7 @@ class MissionInterne(models.Model):
         return res
 
     @api.onchange('date_retour', 'date_cr')
-    def onchange_date_depart_covid(self):
+    def onchange_date_retour_covid(self):
         for rec in self:
             if rec.date_retour and rec.date_cr and rec.date_retour < rec.date_cr:
                 raise Warning(_('La date "Test Covid" doit être avant la date d\'arrivéé'))
@@ -312,15 +329,6 @@ class MissionOrdinaire(models.Model):
     duree_b = fields.Char(string='Durée d\'util. de Véhi.', required=False)
     responsable = fields.Char(string='Nom de Responsable', required=False)
     post = fields.Char(string='Post de responsable', required=False)
-
-    # test_cr = fields.Selection(string='Test COVID', selection=[(
-    #     'oui', 'Oui'), ('non', 'Non')], required=False, )
-    # date_cr = fields.Date(string='Date de test covid', required=False)
-    #
-    # test_cd = fields.Selection(string='Test COVID', selection=[(
-    #     'oui', 'Oui'), ('non', 'Non')], required=False, )
-    # date_cd = fields.Date(string='Date de test covid', required=False)
-
     frais_m = fields.Selection(string='Frais de Mission', selection=[
         ('oui', 'Oui'), ('non', 'Non')], required=False, )
     date_f = fields.Date(string='Date de frais de mission', required=False)
@@ -341,9 +349,11 @@ class MissionOrdinaire(models.Model):
         string="Commentaire",
         required=False)
     commentaire_ret = fields.Text(string="Commentaire", required=False)
-    jours = fields.Char(
-        string='Jours',
-        required=False, default='Jours')
+    unity_duree_vehicule = fields.Selection([('jours', 'jours'),
+                                             ('semaines', 'semaines'),
+                                             ('mois', 'mois'),
+                                             ('année', 'années')],
+                                            required=False, default='jours')
 
     @api.model
     def create(self, vals):

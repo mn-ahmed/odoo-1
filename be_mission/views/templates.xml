@@ -319,7 +319,7 @@
                                             </tr>
                                             <tr>
                                                 <td><strong>Durée d'util. de Véhicule :</strong></td>
-                                                <td colspan="2" class="text-center"> <span t-field="doc.duree_b"/> Jours</td>
+                                                <td colspan="2" class="text-center"> <span t-field="doc.duree_b"/> <spam t-field="doc.unity_duree_vehicule"/></td>
                                             </tr>
                                         </t>
                                          <tr>
@@ -439,19 +439,6 @@
                                             <td><strong>Date de Départ</strong></td>
                                             <td class="text-right" colspan="2"> <span t-field="doc.date_depart"/></td>
                                         </tr>
-<!--                                        <t t-if="doc.test_cd != 'oui'">-->
-<!--                                            <tr>-->
-<!--                                                <td><strong>Test COVID :</strong></td>-->
-<!--                                                <td class="text-right" colspan="2"> <span t-field="doc.test_cd"/></td>-->
-<!--                                            </tr>-->
-<!--                                        </t>-->
-<!--                                        <t t-else="">-->
-<!--                                             <tr>-->
-<!--                                                <td><strong>Test COVID :</strong></td>-->
-<!--                                                <td> <span t-field="doc.test_cd"/></td>-->
-<!--                                                <td class="text-right"><strong>Date : </strong><span t-field="doc.date_cd"/></td>-->
-<!--                                             </tr>-->
-<!--                                        </t>-->
                                         <tr>
                                             <t t-if="doc.o_mission != 'oui'">
                                                 <td><strong>Ordre de mission :</strong></td>
@@ -478,7 +465,7 @@
                                             </tr>
                                             <tr>
                                                 <td><strong>Durée d'util. de Véhicule :</strong></td>
-                                                <td colspan="2" class="text-center"> <span t-field="doc.duree_b"/> Jours</td>
+                                                <td colspan="2" class="text-center"> <span t-field="doc.duree_b"/> <spam t-field="doc.unity_duree_vehicule"/></td>
                                             </tr>
                                             <tr>
                                             <t t-if="doc.p_carburant != 'oui'">
@@ -533,17 +520,6 @@
                                             <td><strong>Date de Retour</strong></td>
                                             <td> <span t-field="doc.date_retour"/></td>
                                         </tr>
-<!--                                        <tr>-->
-<!--                                            <t t-if="doc.test_cr != 'oui'">-->
-<!--                                                <td><strong>Test COVID :</strong></td>-->
-<!--                                                <td colspan="2" class="text-right"> <span t-field="doc.test_cr"/></td>-->
-<!--                                            </t>-->
-<!--                                            <t t-else="">-->
-<!--                                                <td><strong>Test COVID :</strong></td>-->
-<!--                                                <td> <span t-field="doc.test_cr"/></td>-->
-<!--                                                <td class="text-right"><strong>Date : </strong><span t-field="doc.date_cr"/></td>-->
-<!--                                            </t>-->
-<!--                                        </tr>-->
                                        <tr>
                                             <t t-if="doc.p_financier != 'oui'">
                                                 <td><strong>Point financier? :</strong></td>

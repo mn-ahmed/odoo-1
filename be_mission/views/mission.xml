@@ -151,6 +151,7 @@
           <field name="passport"/>
           <field name="date_arriver" />
           <field name="date_depart" />
+          <field name="state" />
         </tree>
       </field>
     </record>
@@ -180,6 +181,7 @@
           <field name="passport" />
           <field name="date_depart" />
           <field name="date_retour"/>
+          <field name="state" />
         </tree>
       </field>
     </record>
@@ -258,7 +260,7 @@
                 <label for="duree_b" string="Durée d'util. de Véhi." />
                  <div class="o_row" name="duree_b">
                   <field name="duree_b" attrs="{'readonly': [('state', 'not in', ('draft','arriver'))]}"/>
-                  <field name="jours" attrs="{'invisible':[('duree_b', '==', False)],'readonly': 1 }"/>
+                  <field name="unity_duree_vehicule" attrs="{'readonly': [('state', 'not in', ('draft','arriver'))]}"/>
                 </div>
               </group>
             </group>
@@ -330,6 +332,7 @@
           <field name="passport" />
           <field name="date_depart" />
           <field name="date_retour" />
+          <field name="state"/>
         </tree>
       </field>
     </record>
@@ -368,11 +371,7 @@
                 <group>
                   <group>
                     <field name="date_depart" attrs="{'readonly': [('state', 'not in', ('draft','depart'))]}"/>
-<!--                    <label for="test_cd" string="Test COVID / Date"/>-->
-<!--                    <div class="o_row" name="test_cd" >-->
-<!--                      <field name="test_cd" attrs="{'readonly': [('state', 'not in', ('draft','depart'))]}"/>-->
-<!--                      <field name="date_cd" attrs="{'invisible':[('test_cd', 'not in', 'oui')],'readonly': [('state', 'not in', ('draft','depart'))]}"/>-->
-<!--                    </div>-->
+
                     <label for="o_mission" string="Ordre de mission"/>
                     <div class="o_row" name="o_mission">
                       <field name="o_mission" attrs="{'readonly': [('state', 'not in', ('draft','depart'))]}"/>
@@ -397,8 +396,8 @@
                     <field name="matricule" attrs="{'readonly': [('state', 'not in', ('draft','depart'))]}"/>
                     <label for="duree_b" string="Durée d'util. de Véhi." />
                      <div class="o_row" name="duree_b">
-                      <field name="duree_b" attrs="{'readonly': [('state', 'not in', ('draft','arriver'))]}"/>
-                      <field name="jours" attrs="{'invisible':[('duree_b', '==', False)],'readonly': 1 }"/>
+                        <field name="duree_b" attrs="{'readonly': [('state', 'not in', ('draft','arriver'))]}"/>
+                      <field name="unity_duree_vehicule" attrs="{'readonly': [('state', 'not in', ('draft','arriver'))]}"/>
                     </div>
                   </group>
                 </group>

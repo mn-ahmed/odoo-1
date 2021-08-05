@@ -126,7 +126,7 @@ class CommandeMateriel(models.Model):
     def confirme_depart(self):
         for rec in self:
             current_user = rec.env.user
-            if rec.env.user.has_group('commande_materiel.group_commande_materiel_daf') or rec.department_id.manager_id.user_id == current_user:
+            if rec.env.user.has_group('commande_materiel.group_commande_materiel_daf') or rec.env.user.has_group('commande_materiel.group_commande_materiel_csa') or rec.department_id.manager_id.user_id == current_user:
                 rec.date_accept = fields.Date.today()
                 rec.employee_accepter_par_id = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
                 rec.state = 'accepter'
