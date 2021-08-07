@@ -21,10 +21,10 @@
         'security/security.xml',
         'security/ir.model.access.csv',
         'data/commande_sequence.xml',
+        'report/templates.xml',
         'views/commande_view.xml',
         'views/stock_picking_view.xml',
         'views/hr_emplyee_view.xml',
-        'views/templates.xml',
     ],
     # only loaded in demonstration mode
     'demo': [
