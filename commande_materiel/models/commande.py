@@ -32,17 +32,17 @@ class CommandeMateriel(models.Model):
                                     required=True,
                                     copy=True,)
     employee_confirme_par_id = fields.Many2one('hr.employee',
-                                          string='Confirmer par',readonly=True,
+                                          string='Confirmée par',readonly=True,
                                           copy=False)
     employee_accepter_par_id = fields.Many2one('hr.employee',
-                                               string='Accepter par', readonly=True,
+                                               string='Acceptée par', readonly=True,
                                                copy=False)
     employee_rejeter_par_id = fields.Many2one('hr.employee',
-                                              string='Rejeter par',
+                                              string='Rejetée par',
                                               readonly=True,
                                               copy=False, )
     employee_aprouver_par_id = fields.Many2one('hr.employee',
-                                              string='Approuver par',
+                                              string='Approuvée par',
                                               readonly=True,
                                               copy=False, )
     date_confirm = fields.Date(
@@ -84,12 +84,12 @@ class CommandeMateriel(models.Model):
                                     default='non')
     state = fields.Selection([('draft', 'Nouveau'),
                                 ('en_cours', 'En Cours Départ.'),
-                                ('accepter','Accepter'),
-                                ('approuver', 'Approuver'),
+                                ('accepter','Accepté'),
+                                ('approuver', 'Approuvé'),
                                 ('picking', 'Attendre la Réception'),
-                                ('rejeter', 'Rejeter'),
+                                ('rejeter', 'Rejeté'),
                                 ('recu', 'Reçu'),
-                                ('annuler', 'Annuler')],
+                                ('annuler', 'Annulé')],
                              default='draft',
                              track_visibility='onchange', )
     picking_count = fields.Integer(compute='compute_pick_count')
@@ -137,7 +137,7 @@ class CommandeMateriel(models.Model):
                 rec.state = 'accepter'
             else:
                 raise Warning(
-                    _('Vous n\'êtes pas autorisé de passer cette action !! Veuillez connecter avec un autre utilisateur'))
+                    _('Vous n\'êtes pas autorisé à passer cette action !! Veuillez connecter avec un autre utilisateur'))
 
     def confirme_manager(self):
         for rec in self:
@@ -176,7 +176,7 @@ class CommandeMateriel(models.Model):
         move_obj = self.env['stock.move']
         for rec in self:
             if not rec.commande_line_ids:
-                raise Warning(_('Veuillez créer des lignes de demande,'))
+                raise Warning(_('Veuillez créer votre ligne de demande,'))
             if not rec.location_id:
                 raise Warning(_('Veuillez sélectionneer l\'emplacement source'))
             if not rec.custom_picking_type_id.id:
@@ -224,7 +224,7 @@ class CommandeMateriel(models.Model):
         for rec in self:
             if rec.motifrejet == False:
                 raise Warning(
-                    _('Le champ Motif de Rejet ne de doit pas être vide !!'))
+                    _('Le champ Motif de Rejet ne doit pas être vide !!'))
             else:
                 rec.date_reject = fields.Date.today()
                 rec.employee_rejeter_par_id = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)

@@ -4,7 +4,7 @@
           <report
             id="report_mission_externe"
             model="mission.externe"
-            string="Ticket Mission Exerne"
+            string="Ticket Mission Externe"
             report_type="qweb-pdf"
             name="be_mission.mission_externe_ticket_template"
             file="be_mission.mission_externe_ticket_template"
@@ -20,7 +20,7 @@
                                     <div class="text-center">
                                         <h2>
                                         <strong>
-                                            <p>Mission Exterene </p>
+                                            <p>Mission Externe </p>
                                             <p t-field="doc.name"/>
                                         </strong>
                                         <br/>
@@ -34,7 +34,7 @@
                                             <td> <span t-field="doc.person_name"/></td>
                                         </tr>
                                         <tr>
-                                           <td><strong>Numéro de Passport :</strong></td>
+                                           <td><strong>Numéro du Passeport :</strong></td>
                                             <td> <span t-field="doc.passport"/></td>
                                        </tr>
                                         <tr>
@@ -50,13 +50,13 @@
                                     <div class="text-center">
                                         <strong>
                                             <h4>
-                                                ARRIVE :
+                                                ARRIVÉ :
                                             </h4>
                                         </strong>
                                     </div>
                                     <table class="table table-sm" style="page-break-inside: avoid;">
                                         <tr>
-                                            <td><strong>Date d'Arrivé</strong></td>
+                                            <td><strong>Date d'Arrivée</strong></td>
                                             <td class="text-right" colspan="2"> <span t-field="doc.date_arriver"/></td>
                                         </tr>
                                         <t t-if="doc.test_ca != 'oui'">
@@ -103,43 +103,43 @@
                                             <td colspan="2" class="text-center"> <span t-field="doc.post_v"/></td>
                                         </tr>
                                          <tr>
-                                            <td><strong>Nom de Hotel :</strong></td>
+                                            <td><strong>Nom de l'hôtel :</strong></td>
                                             <td colspan="2" class="text-center"> <span t-field="doc.hotel"/></td>
                                         </tr>
                                         <tr>
                                             <t t-if="doc.frais_h != 'autres'">
-                                                <td><strong>Frais de Hotel :</strong></td>
+                                                <td><strong>Frais de l'hôtel :</strong></td>
                                                 <td class="text-right" colspan="2"> <span t-field="doc.frais_h"/></td>
                                             </t>
                                             <t t-else="">
-                                                <td><strong>Frais de Hotel :</strong></td>
+                                                <td><strong>Frais hôtel :</strong></td>
                                                 <td> <span t-field="doc.frais_h"/></td>
                                                 <td class="text-center" colspan="2"><strong></strong><span t-field="doc.commentaire"/></td>
                                             </t>
                                         </tr>
                                         <tr>
-                                            <td><strong>Duree de séjour :</strong></td>
+                                            <td><strong>Durée du séjour :</strong></td>
                                             <td colspan="2" class="text-center"><span t-field="doc.duree_s"/> <spam t-field="doc.unity_sejour" /></td>
                                         </tr>
                                         <tr>
-                                            <td><strong>Duree de séjour hotel :</strong></td>
+                                            <td><strong>Durée du séjour hôtel :</strong></td>
                                             <td colspan="2" class="text-center"><span t-field="doc.duree_h"/> <spam t-field="doc.unity_sejour_hotel" /></td>
                                         </tr>
                                         <t t-if="doc.chauffeur">
                                             <tr>
-                                                <td><strong>Nom de Chauffeur :</strong></td>
+                                                <td><strong>Nom du Chauffeur :</strong></td>
                                                 <td colspan="2" class="text-center"> <span t-field="doc.n_chauffeur"/></td>
                                             </tr>
                                             <tr>
-                                                <td><strong>Contact de Chauffeur :</strong></td>
+                                                <td><strong>Contact du Chauffeur :</strong></td>
                                                 <td colspan="2" class="text-center"> <span t-field="doc.chauffeur_cont"/></td>
                                             </tr>
                                             <tr>
-                                                <td><strong>Matricule de Véhicule :</strong></td>
+                                                <td><strong>Matricule du Véhicule :</strong></td>
                                                 <td colspan="2" class="text-center"> <span t-field="doc.matricule"/></td>
                                             </tr>
                                             <tr>
-                                                <td><strong>Durée d'util. de Véhicule :</strong></td>
+                                                <td><strong>Durée d'util. du Véhicule :</strong></td>
                                                 <td colspan="2" class="text-center"> <span t-field="doc.duree_b"/> <spam t-field="doc.unity_duree_vehicule" /></td>
                                             </tr>
                                         </t>
@@ -224,7 +224,7 @@
                                             <td><strong>Nom et Prénom :</strong></td><td> <span t-field="doc.employee_id"/></td>
                                         </tr>
                                         <tr>
-                                           <td><strong>Numéro de Passport :</strong></td><td> <span t-field="doc.passport"/></td>
+                                           <td><strong>Numéro du Passeport :</strong></td><td> <span t-field="doc.passport"/></td>
                                        </tr>
                                         <tr>
                                            <td><strong>Date d'Expiration :</strong></td><td> <span t-field="doc.date_exp"/></td>
@@ -306,19 +306,19 @@
                                         </tr>
                                         <t t-if="doc.vehicule == 'oui'">
                                             <tr>
-                                                <td><strong>Nom de Chauffeur :</strong></td>
+                                                <td><strong>Nom du Chauffeur :</strong></td>
                                                 <td colspan="2" class="text-center"> <span t-field="doc.n_chauffeur"/></td>
                                             </tr>
                                             <tr>
-                                                <td><strong>Contact de Chauffeur :</strong></td>
+                                                <td><strong>Contact du Chauffeur :</strong></td>
                                                 <td colspan="2" class="text-center"> <span t-field="doc.chauffeur_cont"/></td>
                                             </tr>
                                             <tr>
-                                                <td><strong>Matricule de Véhicule :</strong></td>
+                                                <td><strong>Matricule du Véhicule :</strong></td>
                                                 <td colspan="2" class="text-center"> <span t-field="doc.matricule"/></td>
                                             </tr>
                                             <tr>
-                                                <td><strong>Durée d'util. de Véhicule :</strong></td>
+                                                <td><strong>Durée d'utilisation du Véhicule :</strong></td>
                                                 <td colspan="2" class="text-center"> <span t-field="doc.duree_b"/> <spam t-field="doc.unity_duree_vehicule"/></td>
                                             </tr>
                                         </t>
@@ -365,11 +365,11 @@
                                         </tr>
                                        <tr>
                                             <t t-if="doc.p_financier != 'oui'">
-                                                <td><strong>Point financier? :</strong></td>
+                                                <td><strong>Point financier ? :</strong></td>
                                                 <td colspan="2" class="text-right"> <span t-field="doc.p_financier"/></td>
                                             </t>
                                             <t t-else="">
-                                                <td><strong>Point financier? :</strong></td>
+                                                <td><strong>Point financier ? :</strong></td>
                                                 <td> <span t-field="doc.p_financier"/></td>
                                                 <td class="text-right"><strong>Date : </strong><span t-field="doc.date_pf"/></td>
                                             </t>
@@ -452,19 +452,19 @@
                                         </tr>
                                         <t t-if="doc.vehicule == 'oui'">
                                             <tr>
-                                                <td><strong>Nom de Chauffeur :</strong></td>
+                                                <td><strong>Nom du Chauffeur :</strong></td>
                                                 <td colspan="2" class="text-center"> <span t-field="doc.n_chauffeur"/></td>
                                             </tr>
                                             <tr>
-                                                <td><strong>Contact de Chauffeur :</strong></td>
+                                                <td><strong>Contact du Chauffeur :</strong></td>
                                                 <td colspan="2" class="text-center"> <span t-field="doc.chauffeur_cont"/></td>
                                             </tr>
                                             <tr>
-                                                <td><strong>Matricule de Véhicule :</strong></td>
+                                                <td><strong>Matricule du Véhicule :</strong></td>
                                                 <td colspan="2" class="text-center"> <span t-field="doc.matricule"/></td>
                                             </tr>
                                             <tr>
-                                                <td><strong>Durée d'util. de Véhicule :</strong></td>
+                                                <td><strong>Durée d'utilisation du Véhicule :</strong></td>
                                                 <td colspan="2" class="text-center"> <span t-field="doc.duree_b"/> <spam t-field="doc.unity_duree_vehicule"/></td>
                                             </tr>
                                             <tr>
@@ -492,11 +492,11 @@
                                         </tr>
                                         <tr>
                                             <t t-if="doc.equipement != 'oui'">
-                                                <td><strong>Equipement? :</strong></td>
+                                                <td><strong>Equipement ? :</strong></td>
                                                 <td class="text-right" colspan="2"> <span t-field="doc.equipement"/></td>
                                             </t>
                                             <t t-else="">
-                                                <td><strong>Equipement? :</strong></td>
+                                                <td><strong>Equipement ? :</strong></td>
                                                 <td><span t-field="doc.equipement"/></td>
                                                 <td class="text-right" colspan="2"><strong>Date : </strong><span t-field="doc.date_q"/></td>
                                             </t>
@@ -522,22 +522,22 @@
                                         </tr>
                                        <tr>
                                             <t t-if="doc.p_financier != 'oui'">
-                                                <td><strong>Point financier? :</strong></td>
+                                                <td><strong>Point financier ? :</strong></td>
                                                 <td colspan="2" class="text-right"> <span t-field="doc.p_financier"/></td>
                                             </t>
                                             <t t-else="">
-                                                <td><strong>Point financier? :</strong></td>
+                                                <td><strong>Point financier ? :</strong></td>
                                                 <td> <span t-field="doc.p_financier"/></td>
                                                 <td class="text-right"><strong>Date : </strong><span t-field="doc.date_pf"/></td>
                                             </t>
                                         </tr>
                                         <tr>
                                             <t t-if="doc.p_equipement != 'oui'">
-                                                <td><strong>Point Equipement? :</strong></td>
+                                                <td><strong>Point Equipement ? :</strong></td>
                                                 <td colspan="2" class="text-right"> <span t-field="doc.p_equipement"/></td>
                                             </t>
                                             <t t-else="">
-                                                <td><strong>Point Equipement?:</strong></td>
+                                                <td><strong>Point Equipement ?:</strong></td>
                                                 <td> <span t-field="doc.p_equipement"/></td>
                                                 <td class="text-right"><strong>Date : </strong><span t-field="doc.date_p_eq"/></td>
                                             </t>

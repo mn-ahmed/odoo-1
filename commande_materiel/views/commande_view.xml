@@ -17,11 +17,11 @@
               </style>
 
               <header>
-                <button name="confirme_user" type="object" string="Confimer" states="draft"
+                <button name="confirme_user" type="object" string="Confirmé" states="draft"
                         class="btn-primary" groups="base.group_user"/>
-                <button name="confirme_depart" type="object" string="Départ. Confimation" states="en_cours,annuler"
+                <button name="confirme_depart" type="object" string="Confirmé" states="en_cours,annuler"
                         class="btn-primary" groups="commande_materiel.group_commande_materiel_respo_depart,commande_materiel.group_commande_materiel_csa"/>
-                <button name="confirme_manager" type="object" string="Manager Confirmation" states="accepter" class="btn-primary"
+                <button name="confirme_manager" type="object" string="Confirmé" states="accepter" class="btn-primary"
                         groups="commande_materiel.group_commande_materiel_csa,commande_materiel.group_commande_materiel_daf" />
                 <button name="request_stock" type="object" string="Créer Transfert Interne" attrs="{'invisible': [('state','!=','approuver')]}" class="btn-primary"
                         groups="commande_materiel.group_commande_materiel_csa,commande_materiel.group_commande_materiel_daf"/>
@@ -29,8 +29,8 @@
                         groups="commande_materiel.group_commande_materiel_daf,commande_materiel.group_commande_materiel_csa,commande_materiel.group_commande_materiel_respo_depart" />
                 <button name="recu_user" type="object" string="Reçu" attrs="{'invisible': ['|',('pick_confirmed', '=', False),('state' , '!=', 'picking')]}"
                         class="btn-primary" groups="base.group_user" />
-                <button name="annulee_commande" type="object" string="Annulée" states="draft"/>
-                <field name="state" widget="statusbar" string="confirme"
+                <button name="annulee_commande" type="object" string="Annulé" states="draft"/>
+                <field name="state" widget="statusbar" string="confirmé"
                        statusbar_visible="draft,en_cours,accepter,approuver,recu"
                        />
               </header>
@@ -62,7 +62,7 @@
                       </group>
                     </group>
                     <notebook>
-                      <page string="Lignes des Commande">
+                      <page string="Ligne des Commandes">
                         <field name="commande_line_ids" attrs="{'readonly': ['|', ('state', 'in', ('recu','en_cours')),('change_commande_line', '=', False)]}">
                           <tree editable="bottom">
                             <field name="product_id" />
@@ -73,6 +73,20 @@
                           </tree>
                         </field>
                       </page>
+
+
+                       <page string="Détails de Transfert" attrs="{'invisible':[('state', '!=', 'approuver')]}" groups="commande_materiel.group_commande_materiel_csa,commande_materiel.group_commande_materiel_employee">
+                                <group>
+                                    <group>
+                                            <field name="location_id"/>
+                                    </group>
+                                    <group>
+                                        <field name="dest_location_id" />
+                                        <field name="delivery_picking_id" string="Transfert N:"/>
+                                        <field name="custom_picking_type_id" string="Type d\'opération" groups="base.group_user"/>
+                                    </group>
+                                </group>
+                            </page>
 
                       <page string="Autres Informations">
                         <group>
@@ -90,18 +104,7 @@
                           </group>
                         </group>
                       </page>
-                        <page string="Details de Transfert" attrs="{'invisible':[('state', '!=', 'approuver')]}" groups="commande_materiel.group_commande_materiel_csa,commande_materiel.group_commande_materiel_employee">
-                                <group>
-                                    <group>
-                                            <field name="location_id"/>
-                                    </group>
-                                    <group>
-                                        <field name="dest_location_id" />
-                                        <field name="delivery_picking_id" string="Transfert N:"/>
-                                        <field name="custom_picking_type_id" string="Type d\'opération" groups="base.group_user"/>
-                                    </group>
-                                </group>
-                            </page>
+                       
 
                     </notebook>
                     <group>
@@ -164,7 +167,7 @@
       <field name="name">Liste des Commandes</field>
       <field name="type">ir.actions.act_window</field>
       <field name="res_model">commande.materiel</field>
-      <field name="view_mode">tree,form,pivot,graph,activity</field>
+      <field name="view_mode">tree,form,pivot,graph</field>
     </record>
 
     <record id="commande_materiel_action_view_tree" model="ir.actions.act_window.view">

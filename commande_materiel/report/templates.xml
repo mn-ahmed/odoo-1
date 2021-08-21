@@ -4,7 +4,7 @@
         <report
             id="report_commande_materiel"
             model="commande.materiel"
-            string="Rapport Exécution des Basoins"
+            string="Rapport Expression des Besoins"
             report_type="qweb-pdf"
             name="commande_materiel.commande_materiel_report"
             file="commande_materiel.commande_materiel_report"
@@ -94,7 +94,7 @@
                                         <tbody class="invoice-tbody">
                                             <tr style="">
                                                 <td class="text-left">
-                                                    <strong>Confirmer par: </strong> <spam t-field="doc.employee_confirme_par_id"/>
+                                                    <strong>Confirmée par: </strong> <spam t-field="doc.employee_confirme_par_id"/>
                                                 </td>
                                                 <td class="text-center">
                                                     <spam t-field="doc.date_confirm"/>
@@ -102,7 +102,7 @@
                                             </tr>
                                             <tr style="">
                                                <td class="text-left">
-                                                   <strong>Accepter par: </strong> <spam t-field="doc.employee_accepter_par_id"/>
+                                                   <strong>Acceptée par: </strong> <spam t-field="doc.employee_accepter_par_id"/>
                                                </td>
                                                <td class="text-center">
                                                    <spam t-field="doc.date_accept"/>
@@ -110,7 +110,7 @@
                                             </tr>
                                             <tr style="">
                                                <td class="text-left">
-                                                   <strong>Approuver par: </strong> <spam t-field="doc.employee_aprouver_par_id"/>
+                                                   <strong>Approuvée par: </strong> <spam t-field="doc.employee_aprouver_par_id"/>
                                                </td>
                                                <td class="text-center">
                                                    <spam t-field="doc.date_appr"/>
@@ -119,7 +119,7 @@
                                             <t t-if="doc.state=='rejeter'">
                                                 <tr style="">
                                                    <td class="text-left">
-                                                       <strong>Rejeter par: </strong> <spam t-field="doc.employee_rejeter_par_id"/>
+                                                       <strong>Rejetée par: </strong> <spam t-field="doc.employee_rejeter_par_id"/>
                                                    </td>
                                                    <td class="text-center">
                                                        <spam t-field="doc.date_reject"/>

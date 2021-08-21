@@ -27,9 +27,9 @@ class MissionExterne(models.Model):
     date_exp = fields.Date(string='Date d\'expiration', required=False)
 
     date_arriver = fields.Date(
-        string='Date d\'arrivéé', default=fields.Date.context_today, store=True, required=False)
+        string='Date d\'arrivée', default=fields.Date.context_today, store=True, required=False)
 
-    passport = fields.Char(string='Numéro de Passport', required=False)
+    passport = fields.Char(string='Numéro du Passeport', required=False)
     objet = fields.Text(string="Objet Mission", required=False)
 
     visa = fields.Selection(string='Visa', selection=[('oui', 'Oui'), ('non', 'Non')], required=False, )
@@ -42,10 +42,10 @@ class MissionExterne(models.Model):
 
     post_v = fields.Char(string='Fonction voyageur', required=False)
     chauffeur = fields.Boolean(string='Chauffeur', required=False)
-    n_chauffeur = fields.Char(string='Nom de Chauffeur', required=False)
-    chauffeur_cont = fields.Char(string='Contact de Chauffeur', required=False)
-    matricule = fields.Char(string='Matricule de Véhicule', required=False)
-    duree_b = fields.Char(string='Durée d\'util. de Véhi.', required=False)
+    n_chauffeur = fields.Char(string='Nom du Chauffeur', required=False)
+    chauffeur_cont = fields.Char(string='Contact du Chauffeur', required=False)
+    matricule = fields.Char(string='Matricule du Véhicule', required=False)
+    duree_b = fields.Char(string='Durée d\'utilisation du Véhicule', required=False)
     responsable = fields.Char(string='Nom personne ressource', required=False)
     post = fields.Char(string='Fonction personne ressource', required=False)
 
@@ -59,9 +59,9 @@ class MissionExterne(models.Model):
 
     date_cd = fields.Date(string='Date de test covid', required=False)
 
-    hotel = fields.Char(string='Nom de Hotel', required=False)
-    duree_s = fields.Char(string='Duree de séjour', required=False)
-    duree_h = fields.Char(string='Duree de séjour hotel', required=False)
+    hotel = fields.Char(string='Nom de l\'hôtel', required=False)
+    duree_s = fields.Char(string='Durée du séjour', required=False)
+    duree_h = fields.Char(string='Durée du séjour hôtel', required=False)
     autres = fields.Char(
         string='Autres',
         required=False)
@@ -69,8 +69,8 @@ class MissionExterne(models.Model):
         string="Commentaire",
         required=False)
 
-    frais_h = fields.Selection(string='Frais de hotel', selection=[(
-        'employee', 'Employée'), ('webb', 'Webb Fentaine'), ('autres', 'Autres')], required=False, )
+    frais_h = fields.Selection(string='Frais d\'hôtel', selection=[(
+        'employee', 'Employée'), ('webb', 'Webb Fontaine'), ('autres', 'Autres')], required=False, )
 
     point_equi = fields.Text(string='Point Equipement', required=False)
     satisfact = fields.Selection(string='Satisfaction', selection=[('mauv', 'Mauvaise'),
@@ -88,8 +88,8 @@ class MissionExterne(models.Model):
         ('draft', 'Nouveau'),
         ('arriver', 'Arriver'),
         ('depart', 'Départ'),
-        ('terminer', 'Terminer'),
-        ('cancel', 'Annuler')],
+        ('terminer', 'Terminé'),
+        ('cancel', 'Annulé')],
         default='draft',
         track_visibility='onchange', )
     unity_sejour = fields.Selection([('jours','jours'),
@@ -112,14 +112,14 @@ class MissionExterne(models.Model):
         for rec in self:
             if rec.state not in  ('draft', 'cancel'):
                 raise Warning(
-                    _('Vous ne pouvez pas supprimer un formulaire valider'))
+                    _('Vous ne pouvez pas supprimer un formulaire validé'))
         return super(MissionExterne, self).unlink()
 
     @api.onchange('date_arriver', 'date_ca')
     def onchange_date_arriver_covid(self):
         for rec in self:
             if rec.date_arriver and rec.date_ca and rec.date_arriver < rec.date_ca:
-                raise Warning(_('La date "Test Covid" doit être avant la date d\'arrivéé'))
+                raise Warning(_('La date "Test Covid" doit être avant la date d\'arrivée'))
             else:
                 pass
 
@@ -177,7 +177,7 @@ class MissionInterne(models.Model):
     date_retour = fields.Date(
         string='Date de Retour', default=fields.Date.context_today, store=True, required=False)
 
-    passport = fields.Char(string='Numéro de Passport', required=False)
+    passport = fields.Char(string='Numéro du Passeport', required=False)
     objet = fields.Text(string="Objet Mission", required=False)
     o_mission = fields.Selection(string='Ordre de mission', selection=[
         ('oui', 'Oui'), ('non', 'Non')], required=False, )
@@ -195,14 +195,14 @@ class MissionInterne(models.Model):
 
     date_lettre = fields.Date(string='Date', required=False)
 
-    vehicule = fields.Selection(string='Besoin de véhicule?', selection=[
+    vehicule = fields.Selection(string='Besoin de véhicule ?', selection=[
         ('oui', 'Oui'), ('non', 'Non')], required=False, )
-    n_chauffeur = fields.Char(string='Nom de Chauffeur', required=False)
-    chauffeur_cont = fields.Char(string='Contact de Chauffeur', required=False)
-    matricule = fields.Char(string='Matricule de Véhicule', required=False)
-    duree_b = fields.Char(string='Durée d\'util. de Véhi.', required=False)
-    responsable = fields.Char(string='Nom de Responsable', required=False)
-    post = fields.Char(string='Post de responsable', required=False)
+    n_chauffeur = fields.Char(string='Nom du Chauffeur', required=False)
+    chauffeur_cont = fields.Char(string='Contact du Chauffeur', required=False)
+    matricule = fields.Char(string='Matricule du Véhicule', required=False)
+    duree_b = fields.Char(string='Durée d\'utilisation du Véhicule', required=False)
+    responsable = fields.Char(string='Nom du Responsable', required=False)
+    post = fields.Char(string='Poste du responsable', required=False)
 
     test_cr = fields.Selection(string='Test COVID', selection=[(
         'oui', 'Oui'), ('non', 'Non')], required=False, )
@@ -226,8 +226,8 @@ class MissionInterne(models.Model):
         ('draft', 'Nouveau'),
         ('depart', 'Départ'),
         ('retour', 'Retour'),
-        ('terminer', 'Terminer'),
-        ('cancel', 'Annuler')],
+        ('terminer', 'Terminé'),
+        ('cancel', 'Annulé')],
         default='draft',
         track_visibility='onchange', )
     #jours = fields.Char(string='Jours', required=False, default='Jours')
@@ -241,7 +241,7 @@ class MissionInterne(models.Model):
         for rec in self:
             if rec.state not in  ('draft', 'cancel'):
                 raise Warning(
-                    _('Vous ne pouvez pas supprimer un formulaire valider'))
+                    _('Vous ne pouvez pas supprimer un formulaire validé'))
         return super(MissionInterne, self).unlink()
 
     @api.model
@@ -255,7 +255,7 @@ class MissionInterne(models.Model):
     def onchange_date_retour_covid(self):
         for rec in self:
             if rec.date_retour and rec.date_cr and rec.date_retour < rec.date_cr:
-                raise Warning(_('La date "Test Covid" doit être avant la date d\'arrivéé'))
+                raise Warning(_('La date "Test Covid" doit être avant la date d\'arrivée'))
             else:
                 pass
 
@@ -321,14 +321,14 @@ class MissionOrdinaire(models.Model):
         string='Date',
         required=False)
 
-    vehicule = fields.Selection(string='Besoin de véhicule?', selection=[
+    vehicule = fields.Selection(string='Besoin de véhicule ?', selection=[
         ('oui', 'Oui'), ('non', 'Non')], required=False, )
-    n_chauffeur = fields.Char(string='Nom de Chauffeur', required=False)
-    chauffeur_cont = fields.Char(string='Contact de Chauffeur', required=False)
-    matricule = fields.Char(string='Matricule de Véhicule', required=False)
-    duree_b = fields.Char(string='Durée d\'util. de Véhi.', required=False)
-    responsable = fields.Char(string='Nom de Responsable', required=False)
-    post = fields.Char(string='Post de responsable', required=False)
+    n_chauffeur = fields.Char(string='Nom du Chauffeur', required=False)
+    chauffeur_cont = fields.Char(string='Contact du Chauffeur', required=False)
+    matricule = fields.Char(string='Matricule du Véhicule', required=False)
+    duree_b = fields.Char(string='Durée d\'util. du Véhi.', required=False)
+    responsable = fields.Char(string='Nom du Responsable', required=False)
+    post = fields.Char(string='Poste du responsable', required=False)
     frais_m = fields.Selection(string='Frais de Mission', selection=[
         ('oui', 'Oui'), ('non', 'Non')], required=False, )
     date_f = fields.Date(string='Date de frais de mission', required=False)
@@ -428,7 +428,7 @@ class ReportingTicket(models.Model):
 
     montant_total = fields.Float(compute='_compute_montant_total', string='Montant total', digits=(12, 2))
     state = fields.Selection([('draft', 'Nouveau'),
-                              ('valider', 'Valider')],
+                              ('valider', 'Validé')],
                              default='draft',
                              track_visibility='onchange', )
 
@@ -436,7 +436,7 @@ class ReportingTicket(models.Model):
         for rec in self:
             if rec.state != 'draft':
                 raise Warning(
-                    _('Vous ne pouvez pas supprimer un formulaire valider'))
+                    _('Vous ne pouvez pas supprimer un formulaire validé'))
         return super(ReportingTicket, self).unlink()
 
     def valider(self):
