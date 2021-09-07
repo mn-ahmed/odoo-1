@@ -29,8 +29,8 @@ class CommandeMateriel(models.Model):
                                   required=True, copy=True)
     department_id = fields.Many2one('hr.department',
                                     string='Department',
-                                    required=True,
-                                    copy=True,)
+                                    compute='_compute_from_employee_id',
+                                    copy=True, )
     employee_confirme_par_id = fields.Many2one('hr.employee',
                                           string='Confirmée par',readonly=True,
                                           copy=False)
@@ -115,11 +115,11 @@ class CommandeMateriel(models.Model):
         res = super(CommandeMateriel, self).create(vals)
         return res
 
-    @api.onchange('employee_id')
-    def set_department(self):
+    @api.depends('employee_id')
+    def _compute_from_employee_id(self):
         for rec in self:
-            rec.department_id = rec.employee_id.sudo().department_id.id
-            rec.dest_location_id = rec.employee_id.sudo().dest_location_id.id or rec.employee_id.sudo().department_id.dest_location_id.id
+            if rec.employee_id:
+                rec.department_id = rec.employee_id.department_id
 
     # confirm button
     def confirme_user(self):

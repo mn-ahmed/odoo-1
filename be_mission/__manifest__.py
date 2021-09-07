@@ -26,13 +26,8 @@
     'data': [
         'security/security.xml',
         'security/ir.model.access.csv',
-
-        'views/reporting_ticket_view.xml',
-        'views/mission_externe_view.xml',
-        'views/mission_interne_view.xml',
-        'views/mission_ordinaire_view.xml',
-        'views/mission_menu.vew.xml',
-        'views/voyage_view.xml',
+        'views/mission.xml',
+        'views/voyage.xml',
         'views/templates.xml',
         'views/be_mission_data.xml'
     ],

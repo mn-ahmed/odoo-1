@@ -4,6 +4,7 @@ from odoo import models, fields, api, _
 from datetime import datetime
 from odoo.exceptions import Warning, UserError
 from odoo.addons import decimal_precision as dp
+import re
 
 
 class MissionExterne(models.Model):
@@ -45,7 +46,7 @@ class MissionExterne(models.Model):
     n_chauffeur = fields.Char(string='Nom du Chauffeur', required=False)
     chauffeur_cont = fields.Char(string='Contact du Chauffeur', required=False)
     matricule = fields.Char(string='Matricule du Véhicule', required=False)
-    duree_b = fields.Char(string='Durée d\'utilisation du Véhicule', required=False)
+    duree_b = fields.Integer(string='Durée d\'utilisation du Véhicule', required=False)
     responsable = fields.Char(string='Nom personne ressource', required=False)
     post = fields.Char(string='Fonction personne ressource', required=False)
 
@@ -60,8 +61,8 @@ class MissionExterne(models.Model):
     date_cd = fields.Date(string='Date de test covid', required=False)
 
     hotel = fields.Char(string='Nom de l\'hôtel', required=False)
-    duree_s = fields.Char(string='Durée du séjour', required=False)
-    duree_h = fields.Char(string='Durée du séjour hôtel', required=False)
+    duree_s = fields.Integer(string='Durée du séjour', required=False)
+    duree_h = fields.Integer(string='Durée du séjour hôtel', required=False)
     autres = fields.Char(
         string='Autres',
         required=False)
@@ -200,7 +201,7 @@ class MissionInterne(models.Model):
     n_chauffeur = fields.Char(string='Nom du Chauffeur', required=False)
     chauffeur_cont = fields.Char(string='Contact du Chauffeur', required=False)
     matricule = fields.Char(string='Matricule du Véhicule', required=False)
-    duree_b = fields.Char(string='Durée d\'utilisation du Véhicule', required=False)
+    duree_b = fields.Integer(string='Durée d\'utilisation du Véhicule', required=False)
     responsable = fields.Char(string='Nom du Responsable', required=False)
     post = fields.Char(string='Poste du responsable', required=False)
 
@@ -326,7 +327,7 @@ class MissionOrdinaire(models.Model):
     n_chauffeur = fields.Char(string='Nom du Chauffeur', required=False)
     chauffeur_cont = fields.Char(string='Contact du Chauffeur', required=False)
     matricule = fields.Char(string='Matricule du Véhicule', required=False)
-    duree_b = fields.Char(string='Durée d\'util. du Véhi.', required=False)
+    duree_b = fields.Integer(string='Durée d\'util. du Véhi.', required=False)
     responsable = fields.Char(string='Nom du Responsable', required=False)
     post = fields.Char(string='Poste du responsable', required=False)
     frais_m = fields.Selection(string='Frais de Mission', selection=[
